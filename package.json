@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cd client && npm run build",
-    "install":"cd client && npm install",
+    "install": "cd client && npm install",
     "client": "npm start --prefix client"
   },
   "author": "BALALALA",
@@ -14,7 +14,7 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.1",
     "express": "^4.17.3",
     "firebase": "^9.8.2",
     "jsonwebtoken": "^8.5.1",

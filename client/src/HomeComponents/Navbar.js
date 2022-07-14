@@ -15,7 +15,7 @@ function NavBar() {
   const [Avatar, setAvatar] = useState("");
   const [SearchedData, setSearchedData] = useState("");
   const [Image, setImage] = useState(null);
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
   React.useEffect(() => {
     socket.emit("Nav-data", CurrUser);
     socket.on("recieve-Nav-data", (data) => {
@@ -55,11 +55,11 @@ function NavBar() {
     const { id } = e.target;
     if (id === "search") {
       setSearchbar(!searchbar);
-    } else if (id === "new-comment" || id === "cross") {
+    } else if (id === "new-comment" || id === "cancel") {
       setNewPost(!NewPost);
     } else if (id === "Post-btn") {
       if (Content.length > 0) {
-        const url = await UploadImg(Image); 
+        const url = await UploadImg(Image);
         let data = {
           Username: CurrUser,
           Content,
@@ -69,7 +69,7 @@ function NavBar() {
         axios.post(
           process.env.REACT_APP_baseServerurl + "/user/:username/store/post",
           data,
-          { headers: { authorization: token} }
+          { headers: { authorization: token } }
         );
 
         setTimeout(() => {
@@ -247,7 +247,7 @@ function NavBar() {
                   to="/user/home"
                   onClick={() => {
                     localStorage.removeItem("token");
-                    sessionStorage.removeItem("SignedIn")
+                    sessionStorage.removeItem("SignedIn");
                   }}
                 >
                   LogOut
@@ -280,32 +280,35 @@ function NavBar() {
         </div>
         <div id="new-post" className={NewPost === true ? "active" : ""}>
           <div id="textarea-container">
-            <div>
-              <span>
-                <img
-                  alt="cross"
-                  id="cross"
-                  src={require("../images/cross.png")}
-                  onClick={handleClick}
-                ></img>
-              </span>
-            </div>
-            <div>
+            <div className="post-container">
               <textarea
                 id="content"
                 placeholder="Enter Text...."
                 value={Content}
                 onChange={handleChange}
               ></textarea>
-              <input
-                type="file"
-                onChange={(e) => {
-                  setImage(e.target.files[0]);
-                }}
-              ></input>
-              <button id="Post-btn" onClick={handleClick}>
-                Post
-              </button>
+              <div className="button-container">
+                <p id="cancel" onClick={handleClick}>Cancel</p>
+                <div className="Post-btn-container">
+                  <button id="Post-btn" onClick={handleClick}>
+                    Post
+                  </button>
+                  <div className="upload-container">
+                    <input
+                      type="file"
+                      id="upload-img"
+                      onChange={(e) => {
+                        document.getElementById("fileSelected").textContent =
+                          e.target.files[0].name;
+                        setImage(e.target.files[0]);
+                      }}
+                      hidden
+                    />
+                    <label for="upload-img">Upload</label>
+                    <span id="fileSelected">No file selected</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
