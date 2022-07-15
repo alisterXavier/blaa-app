@@ -22,6 +22,7 @@ router.route('/new-user').post((req,res) => {
 })
 
 router.route('/get-users').get((req,res) => {
+    console.log("get")
     Users.find({}, (err, data) => {
         if(!err)
             res.json(data)

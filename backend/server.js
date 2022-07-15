@@ -47,13 +47,13 @@ const {
 
 app.set("io", io)
 
-app.use("/user", verifyToken, require("./route/NodeRoute"));
-
 app.use("/", require("./route/LoginRoute.js"))
 
-app.use("/user/:user/chats", verifyToken, require("./route/ChatRoute"));
-
 app.use("/create", require("./route/Create"));
+
+app.use("/user", verifyToken, require("./route/NodeRoute"));
+
+app.use("/user/:user/chats", verifyToken, require("./route/ChatRoute"));
 
 
 
