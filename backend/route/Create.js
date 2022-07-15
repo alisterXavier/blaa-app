@@ -21,7 +21,7 @@ router.route('/new-user').post((req,res) => {
     })
 })
 
-router.get('/userss', (req,res) => {
+router.post('/userss', (req,res) => {
     res.json("asdsadas")
 })
 

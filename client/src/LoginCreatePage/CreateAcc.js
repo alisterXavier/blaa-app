@@ -139,7 +139,7 @@ function CreatAccForm(props){
     }
 
     React.useEffect(() => {  
-        axios.get(process.env.REACT_APP_baseServerurl + '/create/userss')
+        axios.post(process.env.REACT_APP_baseServerurl + '/create/userss')
         axios.get(process.env.REACT_APP_baseServerurl + '/create/get-users')
           .then(res => {
             let existingUsers = [];
