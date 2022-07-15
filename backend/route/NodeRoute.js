@@ -5,9 +5,6 @@ const { Users, Comments } = require("../model/NodeModel");
 const { verifyToken } = require("../middleware/validateToken");
 ///HomePage
 // router.use()
-router.get("/:username/get-test", (req,res) => {
-  res.json(true)
-})
 
 router.post("/:username/store/:post_reply", (req, res) => {
   const { Username, Content, commentId, Image } = req.body;

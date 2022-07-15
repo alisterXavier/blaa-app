@@ -21,10 +21,6 @@ router.route('/new-user').post((req,res) => {
     })
 })
 
-router.post('/get-users', (req,res) => {
-    res.json("asdsadas")
-})
-
 router.route('/get-users').get((req,res) => {
     res.json("yes")
     // Users.find({}, (err, data) => {

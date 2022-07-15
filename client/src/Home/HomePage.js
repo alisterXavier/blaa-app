@@ -544,7 +544,6 @@ function Home() {
     };
   }
   React.useEffect(() => {
-    axios.get(`${process.env.REACT_APP_baseServerurl}/:username/get-test`)
     socket.emit("content");
     socket.once("get-data", (data) => {
       setMainData(data);
