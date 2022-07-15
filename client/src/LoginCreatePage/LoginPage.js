@@ -250,7 +250,7 @@ function LoginPage() {
           </div>
           <div>
             <button className="createAcc" onClick={() => {
-              navigate(`create/user`)
+              navigate(`create`)
             }}>
               Create new account
             </button>

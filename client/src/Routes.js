@@ -15,7 +15,7 @@ function R(props){
             <Router >
                 <Routes>
                     <Route exact path="/" element={<LoginPage/>} />
-                    <Route exact path="/create/user" element={<Create/>} />
+                    <Route exact path="/create" element={<Create/>} />
                     <Route exact path="/create/:username/avatar" element = {<SelectProfilepic/>}/>
                     <Route exact path="/user/:username" element={<Home/>} />
                     <Route exact path="/user/:username/profile" element={<Profile/>}></Route>

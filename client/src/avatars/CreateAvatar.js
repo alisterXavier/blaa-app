@@ -5,7 +5,7 @@ import "../styles/CreatePage.css";
 import { useNavigate } from 'react-router-dom';
 const jsonData = require('./avatars.json'); 
 
-var url = ""
+var url = null
 function CreateAvatar(props) {
     const avatarUrl=[]
     const avatarurl = "https://avataaars.io/?" 
@@ -57,18 +57,20 @@ function SelectProfilepic(){
     const [refresh, setRefresh] = useState(false)
 
     const handleClick = () => {
-        const avatarData = {
-            username: username,
-            avatar: url
+        if(url !== null){
+            const avatarData = {
+                username: username,
+                avatar: url
+            }
+            axios.post(process.env.REACT_APP_baseServerurl + `/create/${username}/store-avatar`, avatarData)
+            .then(res => {
+                if(res.status){
+                    setTimeout(() => {
+                        navigate("/user/" + username, {state: {username: username}})
+                    }, 1000)  
+                }    
+            })
         }
-        axios.post(process.env.REACT_APP_baseServerurl + "/create/store-avatar", avatarData)
-        .then(res => {
-            if(res.status){
-                setTimeout(() => {
-                    navigate("/user/" + username, {state: {username: username}})
-                }, 1000)  
-            }    
-        })
     }
 
     const handleRefresh = () => {
