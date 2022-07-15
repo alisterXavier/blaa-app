@@ -141,7 +141,6 @@ function CreatAccForm(props){
     React.useEffect(() => {  
         axios.get(process.env.REACT_APP_baseServerurl + '/create/get-users')
           .then(res => {
-            console.log(res)
             let existingUsers = [];
             for(const key in res.data)
                 if(res.data.hasOwnProperty(key)){

@@ -22,11 +22,11 @@ router.route('/new-user').post((req,res) => {
 })
 
 router.route('/get-users').get((req,res) => {
-    console.log("get")
-    Users.find({}, (err, data) => {
-        if(!err)
-            res.json(data)
-    })
+    res.json("yes")
+    // Users.find({}, (err, data) => {
+    //     if(!err)
+    //         res.json(data)
+    // })
 })
 
 router.post('/store-avatar', (req, res) => {

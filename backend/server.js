@@ -47,7 +47,7 @@ const {
 
 app.set("io", io)
 
-app.use("/", require("./route/LoginRoute.js"))
+app.use("/", require("./route/LoginRoute"))
 
 app.use("/create", require("./route/Create"));
 

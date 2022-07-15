@@ -14,10 +14,10 @@ function R(props){
     return(
             <Router >
                 <Routes>
-                    <Route exact path="/user/:username" element={<Home/>} />
                     <Route exact path="/" element={<LoginPage/>} />
                     <Route exact path="/create/user"  element={<Create/>} />
                     <Route exact path="/create/:username/avatar" element = {<SelectProfilepic/>}/>
+                    <Route exact path="/user/:username" element={<Home/>} />
                     <Route exact path="/user/:username/profile" element={<Profile/>}></Route>
                     <Route exact path="/user/:username/search" element={<SearchedContent/>}></Route>
                     <Route exact path="/user/:username/chats" element={<Chats/>}></Route>
