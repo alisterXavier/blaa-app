@@ -4,7 +4,7 @@ const {Users, Comments} = require('../model/NodeModel')
 const { route } = require("./NodeRoute")
 const { genToken } = require('../middleware/validateToken')
 
-router.route('/new-user').post((req,res) => {
+router.route('/user/new-user').post((req,res) => {
 
     const {username, password} = req.body
     
@@ -21,7 +21,7 @@ router.route('/new-user').post((req,res) => {
     })
 })
 
-router.route('/get-users').get((req,res) => {
+router.route('/user/get-users').get((req,res) => {
     res.json("yes")
     // Users.find({}, (err, data) => {
     //     if(!err)
@@ -29,7 +29,7 @@ router.route('/get-users').get((req,res) => {
     // })
 })
 
-router.post('/store-avatar', (req, res) => {
+router.post('/user/store-avatar', (req, res) => {
     const { username, avatar } = req.body
     Users.findOneAndUpdate({username: username}, {$set: {avatar: avatar}}, (err, update) => {
         if(err)
