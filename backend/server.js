@@ -49,11 +49,7 @@ app.set("io", io)
 
 app.use("/", require("./route/LoginRoute"))
 
-// app.use("/create", require("./route/Create"));
-
-app.use('/create/user', (req,res) => {
-  res.json("hey")
-})
+app.use("/create", require("./route/Create"));
 
 app.use("/user", verifyToken, require("./route/NodeRoute"));
 
@@ -86,6 +82,18 @@ io.on("connection", (socket) => {
     console.log(err);
   });
 
+  socket.on("get-users", () => {
+    Users.find({}, (err, data) => {
+      if(!err){
+        var users = []
+        if(data != undefined)
+          data.map(d => {
+            users.push(d.username)
+          })
+        socket.emit("get-users", users)
+      }
+    })
+  })
   socket.on("content", (username) => {
     var recievedData;
     content_id = null;
@@ -96,6 +104,7 @@ io.on("connection", (socket) => {
       }
     });
   });
+
   //---------
   socket.on("profile-content", (username) => {
     Users.find({ username: username }, (err, data) => {
@@ -129,6 +138,7 @@ io.on("connection", (socket) => {
       }
     });
   });
+
   //---------
   socket.on("searchData", (searchData) => {
     var Data = { users: [], comments: [] };

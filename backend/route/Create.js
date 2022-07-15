@@ -3,6 +3,7 @@ const router = express.Router()
 const {Users, Comments} = require('../model/NodeModel')
 const { route } = require("./NodeRoute")
 const { genToken } = require('../middleware/validateToken')
+const { default: Socket } = require("../../client/src/Socket")
 
 router.route('/user/new-user').post((req,res) => {
 
@@ -16,17 +17,18 @@ router.route('/user/new-user').post((req,res) => {
     newUser.save((err,data) => {
         if(!err){
             const token = genToken(username)
+            Users.find({},(err, data)=> {
+                if(!err){
+                    var users = []
+                    data.map(d => {
+                        users.push(d.username)
+                    })
+                    io.emit('get-users', users)
+                }
+            })
             res.json({token: token})
         }
     })
-})
-
-router.route('/user/get').get((req,res) => {
-    res.json("yes")
-    // Users.find({}, (err, data) => {
-    //     if(!err)
-    //         res.json(data)
-    // })
 })
 
 router.post('/user/store-avatar', (req, res) => {

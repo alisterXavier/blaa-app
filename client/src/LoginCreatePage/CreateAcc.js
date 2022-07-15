@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import axios from 'axios';
 import "../styles/CreatePage.css";
 import { useNavigate } from 'react-router-dom';
-import SelectProfilepic from '../avatars/CreateAvatar' 
+import socket from "../Socket";
+
 
 let c = 0;
 let Dark = false
@@ -139,17 +140,14 @@ function CreatAccForm(props){
     }
 
     React.useEffect(() => {  
-        axios.get(process.env.REACT_APP_baseServerurl + '/create/user')
-          .then(res => {
-            let existingUsers = [];
-            for(const key in res.data)
-                if(res.data.hasOwnProperty(key)){
-                    existingUsers.push(res.data[key]['username'])
-                }
-            setUsers(existingUsers)
-          })
-          .catch(err => console.log(err))
-        }, []);
+        socket.emit("get-users")
+    }, []);
+
+    React.useEffect(() => {
+        socket.once("get-users", (data) => {
+            setUsers(data)
+        })
+    })
 
     return(
         <div className="Not-needed">
