@@ -146,8 +146,13 @@ input:focus{
     color: white;
 }
 .Login .createAcc{
+    background-color: transparent;
+    border: none;
+    font-size: large;
+    font-family: Merriweather;
     text-decoration: none;
     color: rgb(78, 89, 248);
+    cursor: pointer;
 }
 .Login .createAcc:hover{
     text-decoration: underline;

@@ -49,7 +49,11 @@ app.set("io", io)
 
 app.use("/", require("./route/LoginRoute"))
 
-app.use("/create", require("./route/Create"));
+// app.use("/create", require("./route/Create"));
+
+app.use('/create/user', (req,res) => {
+  res.json("hey")
+})
 
 app.use("/user", verifyToken, require("./route/NodeRoute"));
 

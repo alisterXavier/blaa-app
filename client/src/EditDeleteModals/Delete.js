@@ -14,7 +14,7 @@ function Delete(props) {
             id : props.DeleteModal[0].id,
             commentId: props.DeleteModal[0].commentId
         }
-        axios.post(`http://localhost:3001/user/${props.DeleteModal[2]}/delete/${props.DeleteModal[0].type}`, data, {headers: token})
+        axios.post(`${process.env.REACT_APP_baseServerurl}/user/${props.DeleteModal[2]}/delete/${props.DeleteModal[0].type}`, data, {headers: token})
         .then(res => {
             if(res.status){
                 if(props.DeleteModal[0].type === "reply")

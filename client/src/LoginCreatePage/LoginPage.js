@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import "../styles/LoginPage.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { validate } from "../token";
 
 let c = 0;
 if (localStorage.getItem("Mode") === "dark") c = 1;
@@ -251,9 +249,11 @@ function LoginPage() {
             </div>
           </div>
           <div>
-            <Link className="createAcc" to="create/user">
+            <button className="createAcc" onClick={() => {
+              navigate(`create/user`)
+            }}>
               Create new account
-            </Link>
+            </button>
           </div>
         </div>
       </div>
