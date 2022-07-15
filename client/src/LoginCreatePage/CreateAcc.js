@@ -14,7 +14,7 @@ function CreatAccForm(props){
     const [Users, setUsers] = useState()
     const [UserValidation, setUserValidation] = useState("")
     const [AccountCreation, setAccountCreation] = useState(false)
-
+    const [Username, setUsername] = useState("")
     const Warnings = () => {
         if(WhiteSpaces === true){
             return(
@@ -26,21 +26,23 @@ function CreatAccForm(props){
     }
 
     const handleChange = (e) => {
-        let {value} = e.target
-        if((/^\s|\s$/).test(value)){
+        setUsername(e.target.value)
+
+        if((/^\s|\s$/).test(Username)){
             setWhiteSpaces(true)
         }
         else
             setWhiteSpaces(false)
 
-        if(value.length === 0 || value === " "){
+        if(Username.length === 0 ){
             setUserValidation("Username not available")
         }
         else if(Users.length === 0)
             setUserValidation("Username available")
         else{
             Users.some(data => {
-                if(value === data){
+                console.log(data)
+                if(Username === data){
                     setUserValidation("Username already exists. Please choose another Username.")
                     return true
                 }
@@ -137,8 +139,9 @@ function CreatAccForm(props){
     }
 
     React.useEffect(() => {  
-        axios.get('http://localhost:3001/create/get-users')
+        axios.get(process.env.REACT_APP_baseServerurl + '/create/get-users')
           .then(res => {
+            console.log(res)
             let existingUsers = [];
             for(const key in res.data)
                 if(res.data.hasOwnProperty(key)){
@@ -157,7 +160,7 @@ function CreatAccForm(props){
                     <p>Username:</p>
                     {Warnings()}
                 </div>
-                <input type="text" id="username" placeholder="Username" onChange={handleChange} autoComplete="off"></input>
+                <input type="text" id="username" placeholder="Username" value={Username} onChange={handleChange} autoComplete="off"></input>
                 <p style={{color: "white", "fontSize": "10px", "height": "15px", "textShadow": "0px 0px 5px black"}}>{UserValidation}</p>
                 <p>Password:</p>
                 <div className="password-container">
@@ -235,7 +238,7 @@ function Create(){
     }
 
     const setPic = () =>{
-        window.location.assign(`http://localhost:3000/create/${Username}/avatar`)
+        window.location.assign(process.env.REACT_APP_baseServerurl + `/create/${Username}/avatar`)
     }
     
   return(
