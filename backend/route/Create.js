@@ -6,6 +6,7 @@ const { genToken } = require('../middleware/validateToken')
 const { default: Socket } = require("../../client/src/Socket")
 
 router.route('/user/new-user').post((req,res) => {
+    const io = req.app.get("io")
 
     const {username, password} = req.body
     
