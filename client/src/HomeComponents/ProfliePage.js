@@ -7,7 +7,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import socket from "../Socket";
 import NavBar from "./Navbar";
 import Loading from "../Loading/Load";
-import { check_content, userName, onDislike, onLike } from "./Functions";
+import { check_content, userName, onDislike, onLike } from "../Functions";
 import { validate } from "../token";
 
 const token = {

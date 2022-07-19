@@ -15,7 +15,6 @@ function LoginPage() {
   const [Authentication, setAuthentication] = useState();
   const [Dark, setDark] = useState(mode === null ? "light" : mode);
 
-
   const handlePassVisibility = () => {
     setPassVisibility(!PassVisibility);
   };
@@ -25,20 +24,34 @@ function LoginPage() {
     if (id === "username") setUsername(e.target.value);
   };
 
+  const handleFeedback = () => {
+    document.getElementById("Login-feedback").style.animation =
+      "slideout 900ms ease";
+    setTimeout(() => {
+      setAuthentication();
+    }, 800);
+  };
+
+  const handleLoginFeed = () => {
+    if (Authentication !== undefined) {
+      return (
+        <div onClick={handleFeedback} className="feedback-container">
+          <div onClick={handleFeedback} id="Login-overlay"></div>
+          <div onClick={handleFeedback} id="Login-feedback">
+            <p onClick={handleFeedback} id="feedback-text">
+              {Authentication
+                ? "Login Successful"
+                : "Login Failed check your username and password"}
+            </p>
+          </div>
+        </div>
+      );
+    }
+  };
+
   const handleClick = async (e) => {
     const password = document.getElementById("password");
-    const { id } = e.target;
-    if (
-      id === "Login-feedback" ||
-      id === "Login-overlay" ||
-      id === "feedback-text"
-    ) {
-      document.getElementById("Login-feedback").style.animation =
-        "slideout 900ms ease";
-      setTimeout(() => {
-        setAuthentication()
-      }, 800)
-    }
+    const { id, className } = e.target;
     if (Username === "") {
       const username = document.getElementById("username");
       username.style.borderLeft = "1px solid red";
@@ -69,34 +82,18 @@ function LoginPage() {
         Username,
         Password: password.value,
       };
-      axios.post(process.env.REACT_APP_baseServerurl + "/login", data)
-      .then(res => {
-        if(res.data.login){
-          setAuthentication(res.data.login)
-          localStorage.setItem("token", res.data.token)
-          sessionStorage.setItem("SignedIn", true)
-        }
-      })
-      .catch(err => {
-        setAuthentication(false)
-      } )
-    }
-  };
-
-  const handleLoginFeed = (boo) => {
-    if (Authentication !== undefined) {
-      return (
-        <div onClick={handleClick} className="feedback-container">
-          <div onClick={handleClick} id="Login-overlay"></div>
-          <div onClick={handleClick} id="Login-feedback">
-            <p onClick={handleClick} id="feedback-text">
-              {boo
-                ? "Login Successful"
-                : "Login Failed check your username and password"}
-            </p>
-          </div>
-        </div>
-      );
+      axios
+        .post(process.env.REACT_APP_baseServerurl + "/login", data)
+        .then((res) => {
+          if (res.data.login) {
+            setAuthentication(res.data.login);
+            localStorage.setItem("token", res.data.token);
+            sessionStorage.setItem("SignedIn", true);
+          }
+        })
+        .catch((err) => {
+          setAuthentication(false);
+        });
     }
   };
 
@@ -108,9 +105,8 @@ function LoginPage() {
     document.getElementById("Text-gradient").classList.remove("active");
   };
 
-  const DarkOrLight = () => {
+  const SwitchDark_Light = () => {
     setDark(Dark === "light" ? "dark" : "light");
-    console.log(Dark);
     const container = document.getElementsByClassName(
       "Credentials-container"
     )[0];
@@ -121,16 +117,15 @@ function LoginPage() {
     container.style.backgroundPosition = `${backgroundPos}%`;
   };
 
-
   React.useEffect(() => {
     const login = document.getElementsByClassName("Login")[0];
     const loginChildren = login.getElementsByTagName("input");
-    
+
     localStorage.setItem("Mode", Dark);
 
     if (Authentication === true)
       setTimeout(() => {
-        sessionStorage.setItem("SignedIn", 'true')
+        sessionStorage.setItem("SignedIn", "true");
         navigate(`user/${Username}`, {
           state: { validation: true, username: Username },
         });
@@ -163,7 +158,7 @@ function LoginPage() {
         )
         .then((res) => {
           setAuthentication(res.data.login);
-          setUsername(res.data.username)
+          setUsername(res.data.username);
         })
         .catch((err) => console.log(err));
     }
@@ -181,7 +176,7 @@ function LoginPage() {
           className="toggle"
           id="modeToggle"
           type="checkbox"
-          onClick={DarkOrLight}
+          onClick={SwitchDark_Light}
         ></input>
       </div>
       <div className="Login">
@@ -249,15 +244,18 @@ function LoginPage() {
             </div>
           </div>
           <div>
-            <button className="createAcc" onClick={() => {
-              navigate(`create`)
-            }}>
+            <button
+              className="createAcc"
+              onClick={() => {
+                navigate(`create`);
+              }}
+            >
               Create new account
             </button>
           </div>
         </div>
       </div>
-      {handleLoginFeed(Authentication)}
+      {handleLoginFeed()}
     </div>
   );
 }

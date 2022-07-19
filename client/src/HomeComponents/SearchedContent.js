@@ -2,12 +2,12 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import React, { useContext, useState } from "react";
 import axios from "axios";
 import { validate } from "../token";
-import { onDislike, onLike, userName, check_content } from "./Functions";
+import Nothing, { onDislike, onLike, userName, check_content } from "../Functions";
 import "../styles/HomePage1.css";
 import Loading from "../Loading/Load";
 import EditContent from "../EditDeleteModals/Edit";
 import Delete from "../EditDeleteModals/Delete";
-import Nothing from "./Functions";
+// import Nothing from "../Functions";
 import NavBar from "./Navbar";
 import socket from "../Socket";
 
@@ -15,7 +15,7 @@ const CurrUser = React.createContext();
 
 function DisplayUsers(props) {
   const navigate = useNavigate();
-  const user = useContext(CurrUser) 
+  const user = useContext(CurrUser);
   return (
     <div className="All-users">
       <h1>{props.users.length > 0 ? "Users" : "No Users"}</h1>
@@ -50,7 +50,7 @@ function SearchedContent() {
   const [EditModal, setEditModal] = useState({ edit: false, id: "" });
   const [Reply, setReply] = useState({ index: -1, reply: false });
   const token = localStorage.getItem("token");
-  const user = validate(token)
+  const user = validate(token);
 
   React.useEffect(() => {
     const data = { comments: [], users: [] };

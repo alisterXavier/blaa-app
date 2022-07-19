@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import socket from "../Socket";
 import { validate } from "../token";
-import { UploadImg } from "../HomeComponents/Functions";
+import { UploadImg } from "../Functions";
 
 function NavBar() {
   const navigate = useNavigate();

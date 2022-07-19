@@ -1,6 +1,6 @@
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
-import { validate } from "../token";
+import { validate } from "./token";
 import { initializeApp } from "firebase/app";
 import { ref, uploadBytes, getStorage, getDownloadURL } from "firebase/storage";
 var parse = require("html-react-parser");
@@ -62,12 +62,12 @@ export const userName = (user, CurrUser,navigate) => {
   );
 };
 
-export const onLike = (id, datas, headers) => {
+export const onLike =  async(id, datas, headers) => {
 
   let CurrUser = validate(headers.headers.authorization)
   if (datas.includes(CurrUser)) return;
-
-  axios.post(
+  
+  await axios.post(
     process.env.REACT_APP_baseServerurl + `/user/${CurrUser}/like/${id}`,
     {},
     headers 
@@ -84,6 +84,17 @@ export const onDislike = (id, datas, headers) => {
     headers
   );
 };
+
+export const debounce = (fn, delay) => {
+  var timeout;
+
+  return (...args) => {
+    if(timeout){
+      clearTimeout(timeout)
+    }
+    timeout = setTimeout(() => {fn(...args)}, delay)
+  }
+}
 
 export default function Nothing() {
   return (

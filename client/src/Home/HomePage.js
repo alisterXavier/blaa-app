@@ -1,4 +1,4 @@
-import React, { useContext, useReducer, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import Delete from "../EditDeleteModals/Delete";
 import EditContent from "../EditDeleteModals/Edit";
 import NavBar from "../HomeComponents/Navbar";
@@ -13,7 +13,7 @@ import {
   onDislike,
   onLike,
   userName,
-} from "../HomeComponents/Functions";
+} from "../Functions";
 var parse = require("html-react-parser");
 
 var token;

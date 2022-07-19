@@ -3,6 +3,7 @@ import axios from "axios";
 import "../styles/CreatePage.css";
 import { useNavigate } from "react-router-dom";
 import socket from "../Socket";
+import { debounce } from "../Functions";
 
 let c = 0;
 let Dark = false;
@@ -15,7 +16,7 @@ function CreatAccForm(props) {
   const [UserValidation, setUserValidation] = useState("");
   const [AccountCreation, setAccountCreation] = useState(false);
   const [UsernameReq, setUsernameReq] = useState(false);
-  const [PassReq, setPassReq] = useState(false)
+  const [PassReq, setPassReq] = useState(false);
   const Warnings = () => {
     if (WhiteSpaces === true) {
       return <span id="Warning-Text">All whitespaces will be eliminated</span>;
@@ -30,22 +31,22 @@ function CreatAccForm(props) {
       setUsernameReq(false);
     } else {
       setWhiteSpaces(false);
-      if (Users.length === 0 || Users === undefined) setUserValidation("Username available");
+      if (Users.length === 0 || Users === undefined)
+        setUserValidation("Username available");
       else if (value.length === 0) {
         setUserValidation("Username cannot be blank");
         setUsernameReq(false);
       } else {
-        Users.some((data) => {
-          if (value === data) {
-            setUserValidation(
-              "Username already exists. Please choose another username."
-            );
-            setUsernameReq(false);
-          } else {
-            setUserValidation("Username available");
-            setUsernameReq(true);
-          }
-        });
+        if (Users.some((data) => value === data)) {
+          console.log(Users.some((data) => value === data))
+          setUserValidation(
+            "Username already exists. Please choose another username."
+          );
+          setUsernameReq(false);
+        } else {
+          setUserValidation("Username available");
+          setUsernameReq(true);
+        }
       }
     }
   };
@@ -92,30 +93,32 @@ function CreatAccForm(props) {
   const handleSubmit = () => {
     const username = document.getElementById("username");
     const password = document.getElementById("password");
-    console.log(UsernameReq, PassReq)
+    console.log(UsernameReq, PassReq);
     if (UsernameReq && PassReq) {
       const newUser = {
         username: username.value,
         password: password.value,
       };
-      axios
-        .post(
-          `${process.env.REACT_APP_baseServerurl}/create/new-user`,
-          newUser
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            localStorage.setItem("token", res.data.token);
-            setAccountCreation(true);
-            setTimeout(() => {
-              props.Profilepic(true);
-              props.username(username.value);
-            }, 2000);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      debounce(() => {
+        axios
+          .post(
+            `${process.env.REACT_APP_baseServerurl}/create/new-user`,
+            newUser
+          )
+          .then((res) => {
+            if (res.status === 200) {
+              localStorage.setItem("token", res.data.token);
+              setAccountCreation(true);
+              setTimeout(() => {
+                props.Profilepic(true);
+                props.username(username.value);
+              }, 2000);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }, 2000);
     }
   };
 
@@ -182,10 +185,8 @@ function CreatAccForm(props) {
             id="password"
             placeholder="Password"
             onChange={(e) => {
-                if(e.target.value.length < 3)
-                    setPassReq(false)
-                else
-                    setPassReq(true)
+              if (e.target.value.length < 3) setPassReq(false);
+              else setPassReq(true);
             }}
             autoComplete="off"
           ></input>

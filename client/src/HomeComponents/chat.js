@@ -3,7 +3,7 @@ import axios from "axios";
 import socket from "../Socket";
 import obj from "../token";
 import { validate } from "../token";
-import { UploadImg } from "../HomeComponents/Functions";
+import { UploadImg } from "../Functions";
 import NavBar from "./Navbar";
 import Loading from "../Loading/Load";
 import { NotificationManager } from "react-notifications";
