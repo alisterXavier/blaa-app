@@ -93,7 +93,6 @@ function CreatAccForm(props) {
   const handleSubmit = () => {
     const username = document.getElementById("username");
     const password = document.getElementById("password");
-    console.log(UsernameReq, PassReq);
     if (UsernameReq && PassReq) {
       const newUser = {
         username: username.value,
@@ -110,6 +109,7 @@ function CreatAccForm(props) {
               localStorage.setItem("token", res.data.token);
               setAccountCreation(true);
               setTimeout(() => {
+                localStorage.setItem("token", res.data.token);
                 props.Profilepic(true);
                 props.username(username.value);
               }, 2000);
@@ -158,7 +158,7 @@ function CreatAccForm(props) {
       <div className="Create">
         <h1>Create Account</h1>
         <div className="field-info">
-          <p>Username:</p>
+          <p style={{marginBottom: "5px"}}>Username:</p>
           {Warnings()}
         </div>
         <input
@@ -178,7 +178,7 @@ function CreatAccForm(props) {
         >
           {UserValidation}
         </p>
-        <p>Password:</p>
+        <p style={{marginTop:"5px", marginBottom: "5px"}}>Password:</p>
         <div className="password-container">
           <input
             type={PassVisibility ? "password" : "text"}
@@ -224,13 +224,6 @@ function CreatAccForm(props) {
             </svg>
           )}
         </div>
-        <p>Email: (optional)</p>
-        <input
-          type="text"
-          id="email"
-          placeholder="E-mail"
-          autoComplete="off"
-        ></input>
         <div className="Create-btnc">
           <div className="popup-bg">
             <button

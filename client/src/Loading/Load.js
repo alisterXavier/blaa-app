@@ -1,3 +1,10 @@
 export default function Loading() {
-    return <div>{console.log("Loading....")}</div>;
+    return (
+    <div className="Loading-container">
+      <p className="Loading">Loading</p>
+      <p className="Loading">Loading</p>
+      <p className="Loading">Loading</p>
+      <p className="Loading">Loading</p>
+    </div>
+    )
   }

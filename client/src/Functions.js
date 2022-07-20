@@ -48,13 +48,13 @@ export const check_content = (content) => {
 };
 
 //
-export const userName = (user, CurrUser,navigate) => {
+export const userName = (user,navigate) => {
   return (
     <p
       className="username"
       id="username"
       onClick={() => {
-        navigate(`/user/${CurrUser}/profile`, { state: { username: user } });
+        navigate(`/user/${user}/profile`, { state: { username: user } });
       }}
     >
       {user}

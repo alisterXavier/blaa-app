@@ -3,6 +3,8 @@ import Delete from "../EditDeleteModals/Delete";
 import EditContent from "../EditDeleteModals/Edit";
 import NavBar from "../HomeComponents/Navbar";
 import "../styles/HomePage1.css";
+import '../styles/loading.css'
+import '../styles/navbar.css'
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import socket from "../Socket";

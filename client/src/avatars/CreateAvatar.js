@@ -65,6 +65,7 @@ function SelectProfilepic(){
             axios.post(process.env.REACT_APP_baseServerurl + `/create/${username}/store-avatar`, avatarData)
             .then(res => {
                 if(res.status){
+                    sessionStorage.setItem("SignedIn", "true");
                     setTimeout(() => {
                         navigate("/user/" + username, {state: {username: username}})
                     }, 1000)  
