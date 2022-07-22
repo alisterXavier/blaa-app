@@ -50,6 +50,15 @@ function NavBar() {
       }
       setSearchbar(!searchbar);
     } else if (id === "new-comment" || id === "cancel") {
+        if(id === "new-comment"){
+            setNavBar(false);
+            const lines = document.getElementsByClassName("nav-lines");
+            for (const x in lines) {
+              if (lines.hasOwnProperty(x)) {
+                lines[x].classList.remove("active");
+              }
+            }
+        }
       setNewPost(!NewPost);
     } else if (id === "Post-btn") {
       if (Content.length > 0) {
@@ -60,11 +69,12 @@ function NavBar() {
           Image: url,
         };
 
-        axios.post(
-          process.env.REACT_APP_baseServerurl + "/user/:username/store/post",
-          data,
-          { headers: { authorization: token } }
-        );
+        axios
+          .post(
+            process.env.REACT_APP_baseServerurl + "/user/:username/store/post",
+            data,
+            { headers: { authorization: token } }
+          )
 
         setTimeout(() => {
           setNewPost(!NewPost);

@@ -76,7 +76,7 @@ io.on("connection", (socket) => {
     Comments.find({}, (err, save) => {
       if (!err) {
         socket.emit("Updated", save.reverse());
-      }
+      }90
     });
   }).on("error", (err) => {
     console.log(err);

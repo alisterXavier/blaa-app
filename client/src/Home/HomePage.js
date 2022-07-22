@@ -315,7 +315,19 @@ function Content(props) {
     }
   };
 
+  const newUpdate = async () =>{
+      const newU = document.getElementsByClassName("PostReply-container")[0].children[0]
+      newU.classList.add("new")
+      // setTimeout(() => {
+      //   newU.classList.remove("new")
+      // }, 4000)
+  }
+
   React.useEffect(() => {
+    if(props.MainData !== undefined && MainDisplay !== undefined)
+      if(props.MainData.length > MainDisplay.length){      
+        newUpdate()
+      }
     setMainDisplay(props.MainData);
   }, [props.MainData]);
 
@@ -383,7 +395,7 @@ function Content(props) {
                             onClick={() => {
                               onDislike(data["_id"], data["score"], {
                                 headers: token,
-                              });
+                              }, CurrUser);
                             }}
                           >
                             <path
@@ -545,18 +557,21 @@ function Home() {
       authorization: localStorage.getItem("token"),
     };
   }
+
   React.useEffect(() => {
     socket.emit("content");
+  }, []);
+  
+  React.useEffect(() => {
+    if (localStorage.getItem("token") === null) setValidation(false);
+    
     socket.once("get-data", (data) => {
       setMainData(data);
     });
-  }, []);
-
-  React.useEffect(() => {
-    if (localStorage.getItem("token") === null) setValidation(false);
 
     socket.once("Updated", (data) => {
-      setMainData(data);
+      setMainData(data)
+      
     });
   });
 
