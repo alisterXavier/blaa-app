@@ -8,7 +8,7 @@
   align-items: center;
 }
 .Loading-container .Loading {
-  position: absolute;
+  position: fixed;
   font-family: 'Times New Roman', Times, serif;
   font-style: italic;
 }

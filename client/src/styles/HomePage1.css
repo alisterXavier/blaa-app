@@ -1,6 +1,6 @@
 .App {
   display: flex;
-  z-index: 0;
+  /* z-index: 0; */
   min-height: 100%;
   height: fit-content;
 }
@@ -11,7 +11,7 @@
 .overlay.active {
   display: block;
   position: fixed;
-  z-index: 99;
+  /* z-index: 99; */
   background-color: rgba(0, 0, 0, 0.855);
   top: 0%;
   bottom: 0%;
@@ -221,7 +221,7 @@
 /* Delete */
 .Delete-confirmation {
   position: fixed;
-  z-index: 99;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -264,16 +264,18 @@
   height: 40px;
   background-color: transparent;
   border-radius: 5px;
-  border: 1px solid white;
+  border: none;
+  /* border: 1px solid white; */
 }
 .Delete-confirmation button:hover {
+  color: black;
   background-color: var(--dark-uname);
 }
 
 /* Edit */
 .edit {
   position: fixed;
-  z-index: 99;
+  z-index: 2;
   top: 25%;
   left: 30%;
   display: flex;
@@ -282,7 +284,7 @@
 }
 .edit::after {
   content: "";
-  background-color: rgba(0, 0, 0, 0.581);
+  background-color: rgba(0, 0, 0, 0.679);
   z-index: -1;
   position: inherit;
   top: 0%;
@@ -441,7 +443,10 @@
 
 /* ProfliePage */
 .Profile-page {
-  margin-left: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding-bottom: 50px;
   width: 100%;
   height: 100%;
@@ -488,18 +493,14 @@
   top: 90%;
   left: 85%;
 }
-.Profile-page header {
-  width: 100%;
-}
 .Profile-page .header-content {
   border: var(--dark-border);
   box-shadow: var(--dark-box-shadow);
-  width: 80%;
+  width: 85%;
   margin-top: 10px;
   margin-bottom: 30px;
-  margin-left: 40px;
   border-radius: 5px;
-  padding: 10px 65px;
+  padding: 30px 65px;
 }
 .Profile-page .header-content div {
   width: 200px;
@@ -512,7 +513,6 @@
   width: 90%;
   padding: 50px 0px;
   box-shadow: var(--dark-box-shadow);
-  margin-left: 40px;
   border: 1px solid transparent;
   border-radius: 5px;
 }
@@ -759,7 +759,7 @@
   display: block;
   position: absolute;
   background-color: rgba(0, 0, 0, 0.829);
-  z-index: 1;
+  /* z-index: 1; */
   top: 10%;
   padding: 30px;
   width: 80vw;
@@ -890,7 +890,7 @@ top: 35%;
   border-top: 1px solid white;
   height: fit-content;
   position: relative;
-  z-index: 1;
+  /* z-index: 1; */
 }
 .chat-container .conversationsContainer .text-bar {
   color: var(--dark-text);

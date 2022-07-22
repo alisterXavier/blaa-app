@@ -62,9 +62,8 @@ export const userName = (user,navigate) => {
   );
 };
 
-export const onLike =  async(id, datas, headers) => {
+export const onLike =  async(id, datas, headers, CurrUser) => {
 
-  let CurrUser = validate(headers.headers.authorization)
   if (datas.includes(CurrUser)) return;
   
   await axios.post(
@@ -74,8 +73,7 @@ export const onLike =  async(id, datas, headers) => {
   );
 };
 
-export const onDislike = (id, datas, headers) => {
-  let CurrUser = validate(headers.headers.authorization)
+export const onDislike = (id, datas, headers, CurrUser) => {
   if (!datas.includes(CurrUser)) return;
   
   axios.post(

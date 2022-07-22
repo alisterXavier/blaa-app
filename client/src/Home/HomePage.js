@@ -101,7 +101,7 @@ function Replies(props) {
                         data-id={data["_id"]}
                         xmlns="http://www.w3.org/2000/svg"
                         onClick={() => {
-                          onLike(data["_id"], props.MainData);
+                          onLike(data["_id"], props.MainData, { headers: token });
                         }}
                       >
                         <path
@@ -118,7 +118,7 @@ function Replies(props) {
                         className="dislike"
                         xmlns="http://www.w3.org/2000/svg"
                         onClick={() => {
-                          onDislike(data["_id"], props.MainData);
+                          onDislike(data["_id"], props.MainData, { headers: token });
                         }}
                       >
                         <path

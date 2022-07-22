@@ -45,21 +45,48 @@
 .navbar-container.active .navbar {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
   border-radius: 0px 0px 5px 0px;
   padding: 15px 10px;
 }
 .navbar-container.active .navbar .navbar-content{
   position: relative;
   width: 100%;
-  margin: 15px 0px;
-  font-size: 25px;
+  height: 10%;
+  color: white;
+  margin: 0px;
+  font-size: 20px;
   display: flex;
   justify-content: center;
   cursor: pointer;
   text-align: center;
+  letter-spacing: 1px;
+  transition: font-size 200ms ease;
 }
-.navbar-container.active .navbar .search  p {
+.navbar-container.active .navbar .navbar-content:hover{
+  transition: font-size 200ms ease;
+  font-size: 25px;
+}
+.navbar-container.active .navbar .navbar-content p, .navbar-container.active .navbar .navbar-content a{
+  display: flex;
+  margin: 0px;
+  align-items: center;
+}
+.navbar-container.active .navbar .navbar-content .icons{
+  position: absolute;
+  fill: url("#myGradient");
+  right: 70%;
+  bottom: 35%;
+  width: 50px;
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: all 200ms ease;
+}
+.navbar-container.active .navbar .navbar-content:hover .icons{
+  transition: all 300ms ease;
+  opacity: 1;
+  transform: rotate(-.3turn);
+  transform: translateX(-15px); 
 }
 .navbar-container.active .navbar .search #search-bar {
   opacity: 0;
@@ -75,10 +102,11 @@
   transform: translateX(200px);
   transition: all 200ms ease;
 }
-.navbar-container.active .searchbar-container {
+.searchbar-container {
   display: none;
+  z-index: 100;
 }
-.navbar-container.active .searchbar-container.active {
+.searchbar-container.active {
   position: fixed;
   display: flex;
   justify-content: center;
@@ -88,7 +116,17 @@
   left: 0%;
   right: 0%;
 }
-.navbar-container.active .searchbar-container.active input[type="search"] {
+.searchbar-container.active::after{
+  content: "";
+  background-color: rgba(0, 0, 0, 0.679);
+  z-index: -1;
+  position: inherit;
+  top: 0%;
+  bottom: 0%;
+  left: 0%;
+  right: 0%;
+} 
+.searchbar-container.active input[type="search"] {
   position: fixed;
   border: none;
   width: 60%;
@@ -97,21 +135,20 @@
   padding: 30px 10px;
   font-size: 30px;
 }
-.navbar-container.active .navbar .Home p {
-  white-space: nowrap;
-  overflow: hidden;
-  width: 100%;
-  text-overflow: clip;
-}
-.navbar-container.active .navbar .user-profile img {
+.navbar-container.active .navbar .navbar-content #Profile-pic {
+  position: absolute;
   border-radius: 50px;
-  width: 50px;
-  cursor: pointer;
+  right: 70%;
+  bottom: 35%;
+  opacity: 0;
+  width: 30px;
+  /* transform: translate(10px) rotate(0deg); */
+  transition: all 500ms ease;
 }
-.navbar-container.active .navbar .user-profile p {
-  white-space: nowrap;
-  text-overflow: clip;
-  overflow: hidden;
+.navbar-container.active .navbar .navbar-content:hover #Profile-pic {
+  opacity: .9;
+  transform: translate(-20px);
+  transition: all 500ms ease;
 }
 .navbar-container.active .navbar .user-profile .Please-Login .Login-Signup {
   color: white;
@@ -127,15 +164,6 @@
   .Login-Signup:hover {
   text-shadow: 0px 0px 5px blue, 0px 0px 7px blue;
 }
-.navbar-container.active .navbar .new-comment p {
-  text-overflow: clip;
-  white-space: nowrap;
-  width: 100%;
-  overflow: hidden;
-}
-.navbar-container.active .navbar .chats p {
-  width: 100%;
-}
 .navbar-container.active .navbar .logOut a {
   text-decoration: none;
   color: white;
@@ -143,10 +171,10 @@
 .navbar-container.active .navbar .logOut a:hover {
   color: lightblue;
 }
-.navbar-container.active #new-post {
+#new-post {
   display: none;
 }
-.navbar-container.active #new-post.active {
+#new-post.active {
   display: block;
   position: fixed;
   background-color: rgba(0, 0, 0, 0.595);
@@ -155,7 +183,7 @@
   bottom: 0%;
   left: 0%;
 }
-.navbar-container.active #new-post.active #textarea-container {
+#new-post.active #textarea-container {
   position: relative;
   width: 100%;
   height: 100%;
@@ -165,7 +193,7 @@
   align-items: center;
   background-color: rgba(0, 0, 0, 0.599);
 }
-.navbar-container.active #new-post #textarea-container .post-container {
+#new-post #textarea-container .post-container {
   background-color: black;
   border: 1px solid blue;
   padding: 10px;
@@ -176,7 +204,7 @@
   justify-content: center;
   color: white;
 }
-.navbar-container.active #new-post.active #content {
+#new-post.active #content {
   border: none;
   color: white;
   background-color: black;
@@ -189,7 +217,7 @@
   box-shadow: none;
   outline: none;
 }
-.navbar-container.active #new-post.active #content.warning::placeholder {
+#new-post.active #content.warning::placeholder {
   color: red;
 }
 .navbar-container.active
