@@ -17,6 +17,8 @@ function CreatAccForm(props) {
   const [AccountCreation, setAccountCreation] = useState(false);
   const [UsernameReq, setUsernameReq] = useState(false);
   const [PassReq, setPassReq] = useState(false);
+  let print;
+
   const Warnings = () => {
     if (WhiteSpaces === true) {
       return <span id="Warning-Text">All whitespaces will be eliminated</span>;
@@ -38,7 +40,7 @@ function CreatAccForm(props) {
         setUsernameReq(false);
       } else {
         if (Users.some((data) => value === data)) {
-          console.log(Users.some((data) => value === data))
+          console.log(Users.some((data) => value === data));
           setUserValidation(
             "Username already exists. Please choose another username."
           );
@@ -98,6 +100,7 @@ function CreatAccForm(props) {
         username: username.value,
         password: password.value,
       };
+
       debounce(() => {
         axios
           .post(
@@ -158,7 +161,7 @@ function CreatAccForm(props) {
       <div className="Create">
         <h1>Create Account</h1>
         <div className="field-info">
-          <p style={{marginBottom: "5px"}}>Username:</p>
+          <p style={{ marginBottom: "5px" }}>Username:</p>
           {Warnings()}
         </div>
         <input
@@ -178,7 +181,7 @@ function CreatAccForm(props) {
         >
           {UserValidation}
         </p>
-        <p style={{marginTop:"5px", marginBottom: "5px"}}>Password:</p>
+        <p style={{ marginTop: "5px", marginBottom: "5px" }}>Password:</p>
         <div className="password-container">
           <input
             type={PassVisibility ? "password" : "text"}
@@ -252,29 +255,24 @@ function Create() {
     )[0];
     c += 1;
 
-    if (Profilepic) {
+    if (!Profilepic) {
       const create = document.getElementsByClassName("Create")[0];
       const createChildren = create.getElementsByTagName("input");
       if (Dark) {
         document.getElementsByClassName("popup-bg")[0].style.backgroundColor =
           "#40e0d08c";
         create.style.color = "white";
-        for (const key in create.getElementsByTagName("input"))
-          if (create.hasOwnProperty(key))
+        for (const key in createChildren)
+          if (createChildren.hasOwnProperty(key))
             createChildren[key].style.color = "white";
       } else {
         document.getElementsByClassName("popup-bg")[0].style.backgroundColor =
           "black";
         create.style.color = "black";
         for (const key in createChildren)
-          if (create.hasOwnProperty(key))
+          if (createChildren.hasOwnProperty(key))
             createChildren[key].style.color = "black";
       }
-    } else {
-      const input = document.querySelector("input[type=file]");
-      if (Dark) {
-        input.style.color = "white";
-      } else input.style.color = "black";
     }
     const backgroundPos = (100 / 3) * 2 * c;
     container.style.backgroundPosition = `${backgroundPos}%`;

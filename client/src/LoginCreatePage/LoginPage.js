@@ -40,8 +40,8 @@ function LoginPage() {
           <div onClick={handleFeedback} id="Login-feedback">
             <p onClick={handleFeedback} id="feedback-text">
               {Authentication
-                ? "Login Successful"
-                : "Login Failed check your username and password"}
+                ? "Thou shall enter"
+                : "Thou shan't enter. Please check your username and password"}
             </p>
           </div>
         </div>

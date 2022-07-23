@@ -5,7 +5,6 @@ import { initializeApp } from "firebase/app";
 import { ref, uploadBytes, getStorage, getDownloadURL } from "firebase/storage";
 var parse = require("html-react-parser");
 
-
 const firebaseConfig = {
   apiKey: "AIzaSyA81HDJZJc7-zQbges_Y2IJfiECyf8-hCI",
   authDomain: "imagessocialmedia-dc79a.firebaseapp.com",
@@ -48,7 +47,7 @@ export const check_content = (content) => {
 };
 
 //
-export const userName = (user,navigate) => {
+export const userName = (user, navigate) => {
   return (
     <p
       className="username"
@@ -62,20 +61,19 @@ export const userName = (user,navigate) => {
   );
 };
 
-export const onLike =  async(id, datas, headers, CurrUser) => {
-
+export const onLike = async (id, datas, headers, CurrUser) => {
   if (datas.includes(CurrUser)) return;
-  
+
   await axios.post(
     process.env.REACT_APP_baseServerurl + `/user/${CurrUser}/like/${id}`,
     {},
-    headers 
+    headers
   );
 };
 
 export const onDislike = (id, datas, headers, CurrUser) => {
   if (!datas.includes(CurrUser)) return;
-  
+
   axios.post(
     process.env.REACT_APP_baseServerurl + `/user/${CurrUser}/dislike/${id}`,
     {},
@@ -83,16 +81,14 @@ export const onDislike = (id, datas, headers, CurrUser) => {
   );
 };
 
+var timeoutId;
 export const debounce = (fn, delay) => {
-  var timeout;
-
-  return (...args) => {
-    if(timeout){
-      clearTimeout(timeout)
-    }
-    timeout = setTimeout(() => {fn(...args)}, delay)
+  if (timeoutId) {
+    clearTimeout(timeoutId);
   }
-}
+
+  timeoutId = setTimeout(fn, delay);
+};
 
 export default function Nothing() {
   return (

@@ -16,7 +16,6 @@ import {
   onLike,
   userName,
 } from "../Functions";
-var parse = require("html-react-parser");
 
 var token;
 var CurrentAvatar;
@@ -318,9 +317,9 @@ function Content(props) {
   const newUpdate = async () =>{
       const newU = document.getElementsByClassName("PostReply-container")[0].children[0]
       newU.classList.add("new")
-      // setTimeout(() => {
-      //   newU.classList.remove("new")
-      // }, 4000)
+      setTimeout(() => {
+        newU.classList.remove("new")
+      }, 1000)
   }
 
   React.useEffect(() => {
