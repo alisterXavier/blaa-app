@@ -12,22 +12,23 @@ router.route("/login").post((req, res) => {
   const auth = req.headers.authorization;
   let token;
   if (auth != null || auth != undefined) {
-    console.log("auth")
     token = auth || auth.split(" ")[1];
-    jwt.verify(token, process.env.TokenSecretKey,(err, decoded) => {
-      if(err){
-          return res.status(401).send("Thou shall not enter")
+    jwt.verify(token, process.env.TokenSecretKey, (err, decoded) => {
+      if (err) {
+        return res.status(401).send("Thou shall not enter");
       }
-      res.json({ login: true, token: `${token}`, username:decoded.username});
-  })
+      res.json({ login: true, token: `${token}`, username: decoded.username });
+    });
   } else
     Users.find({ username: Username }, (err, data) => {
       if (!err && data.length > 0) {
         if (data[0].password === Password) {
-            token = genToken(Username);
-            res.json({ login: true, token: token, username: Username });
+          token = genToken(Username);
+          res.json({ login: true, token: token, username: Username });
+        } else {
+          res.status(401).send({ login: false });
         }
-      } else res.status(401).send({login: false});
+      }
     });
 });
 
