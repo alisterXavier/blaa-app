@@ -40,7 +40,6 @@ function CreatAccForm(props) {
         setUsernameReq(false);
       } else {
         if (Users.some((data) => value === data)) {
-          console.log(Users.some((data) => value === data));
           setUserValidation(
             "Username already exists. Please choose another username."
           );

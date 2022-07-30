@@ -18,7 +18,6 @@ function EditContent(props) {
     }
 
     const onClose = (e) => {
-        console.log(e)
         if(e.target.className === "edit")
         {   
             props.EditModal[1]({edit: false})}
