@@ -303,7 +303,7 @@
     height: 100%;
   }
   #new-post.active #textarea-container .post-container{
-    height: 40%;
+    height: 300px;
     width: 85%;
   }
   #new-post.active #textarea-container .post-container textarea{
