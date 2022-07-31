@@ -8,7 +8,7 @@ import { UploadImg } from "../Functions";
 function NavBar() {
   const navigate = useNavigate();
   const validation = sessionStorage.getItem("SignedIn");
-  let CurrUser = validate(localStorage.getItem("token"));
+  let CurrUser = validate(localStorage.getItem("token")).username;
   const [searchbar, setSearchbar] = useState(false);
   const [NewPost, setNewPost] = useState(false);
   const [Content, setContent] = useState("");
@@ -50,15 +50,15 @@ function NavBar() {
       }
       setSearchbar(!searchbar);
     } else if (id === "new-comment" || id === "cancel") {
-        if(id === "new-comment"){
-            setNavBar(false);
-            const lines = document.getElementsByClassName("nav-lines");
-            for (const x in lines) {
-              if (lines.hasOwnProperty(x)) {
-                lines[x].classList.remove("active");
-              }
-            }
+      if (id === "new-comment") {
+        setNavBar(false);
+        const lines = document.getElementsByClassName("nav-lines");
+        for (const x in lines) {
+          if (lines.hasOwnProperty(x)) {
+            lines[x].classList.remove("active");
+          }
         }
+      }
       setNewPost(!NewPost);
     } else if (id === "Post-btn") {
       if (Content.length > 0) {
@@ -69,12 +69,11 @@ function NavBar() {
           Image: url,
         };
 
-        axios
-          .post(
-            process.env.REACT_APP_baseServerurl + "/user/:username/store/post",
-            data,
-            { headers: { authorization: token } }
-          )
+        axios.post(
+          process.env.REACT_APP_baseServerurl + "/user/:username/store/post",
+          data,
+          { headers: { authorization: token } }
+        );
 
         setTimeout(() => {
           setNewPost(!NewPost);
@@ -94,7 +93,7 @@ function NavBar() {
   };
 
   return (
-    <div style={{ width: "100px" }}>
+    <>
       <div className="nav-lines-container" onClick={nav_Cross_Active}>
         <span className="nav-lines"></span>
         <span className="nav-lines"></span>
@@ -285,7 +284,7 @@ function NavBar() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

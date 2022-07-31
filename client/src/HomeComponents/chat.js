@@ -8,7 +8,7 @@ import NavBar from "./Navbar";
 import Loading from "../Loading/Load";
 import { NotificationManager } from "react-notifications";
 
-var CurrUser = validate(localStorage.getItem("token"));
+var CurrUser = validate(localStorage.getItem("token")).username;
 var token;
 const url = process.env.REACT_APP_baseServerurl + `/user/${CurrUser}/chats`;
 
@@ -584,7 +584,7 @@ function Chats() {
     authorization: localStorage.getItem("token"),
   };
 
-  CurrUser = validate(localStorage.getItem("token"));
+  CurrUser = validate(localStorage.getItem("token")).username;
 
   const sendMessage = async (e) => {
     const image = document.getElementById("uploadFile").files[0];

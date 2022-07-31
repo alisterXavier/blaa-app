@@ -3,23 +3,19 @@ import Delete from "../EditDeleteModals/Delete";
 import EditContent from "../EditDeleteModals/Edit";
 import NavBar from "../HomeComponents/Navbar";
 import "../styles/HomePage1.css";
-import '../styles/loading.css'
-import '../styles/navbar.css'
+import "../styles/loading.css";
+import "../styles/navbar.css";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import socket from "../Socket";
 import Loading from "../Loading/Load";
 import { validate } from "../token";
-import {
-  check_content,
-  onDislike,
-  onLike,
-  userName,
-} from "../Functions";
+import { check_content, onDislike, onLike, userName } from "../Functions";
+import { NotificationManager } from "react-notifications";
 
 var token;
 var CurrentAvatar;
-
+var screen = window.screen.width;
 export const username = React.createContext();
 
 function ReplyCont(props) {
@@ -100,7 +96,9 @@ function Replies(props) {
                         data-id={data["_id"]}
                         xmlns="http://www.w3.org/2000/svg"
                         onClick={() => {
-                          onLike(data["_id"], props.MainData, { headers: token });
+                          onLike(data["_id"], props.MainData, {
+                            headers: token,
+                          });
                         }}
                       >
                         <path
@@ -117,7 +115,9 @@ function Replies(props) {
                         className="dislike"
                         xmlns="http://www.w3.org/2000/svg"
                         onClick={() => {
-                          onDislike(data["_id"], props.MainData, { headers: token });
+                          onDislike(data["_id"], props.MainData, {
+                            headers: token,
+                          });
                         }}
                       >
                         <path
@@ -137,7 +137,10 @@ function Replies(props) {
                       </div>
                       <p>{data["createdAt"]}</p>
                     </div>
-                    <div className="content-container" onClick={props.clickHandler}>
+                    <div
+                      className="content-container"
+                      onClick={props.clickHandler}
+                    >
                       {check_content(data["content"])}
                     </div>
                   </div>
@@ -280,10 +283,15 @@ function Content(props) {
   const [MainDisplay, setMainDisplay] = useState();
   const [DeleteModal, setDeleteModal] = useState({ delete: false, id: "" });
   const [Deets, setDeets] = useState({ index: -1, id: "" });
-  const [EditModal, setEditModal] = useState({ edit: false, id: "" });
+  const [EditModal, setEditModal] = useState({ edit: false, id: -1 });
   const [Reply, setReply] = useState({ index: -1, reply: false });
+  const [MobileDeets, setMobileDeets] = useState({ deetsId: -1, deets: false });
+
   const CurrUser = useContext(username);
 
+  const mobileDeets = (index) => {
+    setMobileDeets({ deetsId: index, deets: !MobileDeets.deets });
+  };
   const DeleteConfirmation = (id, type, cId) => {
     setDeleteModal((DeleteModal) => ({
       delete: true,
@@ -293,11 +301,25 @@ function Content(props) {
     }));
   };
 
-  const Edit = (id) => {
-    setEditModal((EditModal) => ({
-      edit: true,
+  const edit = (id) => {
+    const data = {
       id: id,
-    }));
+      Content: document.getElementsByClassName("edit-textarea")[0].value,
+    };
+    console.log(token)
+    axios
+      .post(
+        process.env.REACT_APP_baseServerurl +
+          `/user/${id}/edit`,
+        data,
+        { headers: token }
+      )
+      .then((res) => {
+        if (res.status) {
+          setEditModal({});
+          NotificationManager.success("Post Edited Successfully!");
+        }
+      });
   };
 
   const reply = (e) => {
@@ -314,18 +336,18 @@ function Content(props) {
     }
   };
 
-  const newUpdate = async () =>{
-      const newU = document.getElementsByClassName("PostReply-container")[0].children[0]
-      newU.classList.add("new")
-      setTimeout(() => {
-        newU.classList.remove("new")
-      }, 1000)
-  }
-
+  const newUpdate = async () => {
+    const newU = document.getElementsByClassName("PostReply-container")[0]
+      .children[0];
+    newU.classList.add("new");
+    setTimeout(() => {
+      newU.classList.remove("new");
+    }, 1000);
+  };
   React.useEffect(() => {
-    if(props.MainData !== undefined && MainDisplay !== undefined)
-      if(props.MainData.length > MainDisplay.length){      
-        newUpdate()
+    if (props.MainData !== undefined && MainDisplay !== undefined)
+      if (props.MainData.length > MainDisplay.length) {
+        newUpdate();
       }
     setMainDisplay(props.MainData);
   }, [props.MainData]);
@@ -333,12 +355,15 @@ function Content(props) {
   return (
     <div className="PostReply-container">
       {DeleteModal.delete ? (
-        <Delete DeleteModal={[DeleteModal, setDeleteModal, CurrUser]}></Delete>
-      ) : (
-        <></>
-      )}
-      {EditModal.edit ? (
-        <EditContent EditModal={[EditModal, setEditModal]}></EditContent>
+        <Delete
+          DeleteModal={[
+            DeleteModal,
+            setDeleteModal,
+            CurrUser,
+            setMobileDeets,
+            setDeets,
+          ]}
+        ></Delete>
       ) : (
         <></>
       )}
@@ -347,21 +372,8 @@ function Content(props) {
           if (data["type"] === "post") {
             return (
               <>
-                <div
-                  style={{
-                    width: "90%",
-                    display: "flex",
-                    alignItems: "center",
-                    flexDirection: "column",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "70%",
-                      position: "relative",
-                    }}
-                  >
+                <div className="Post-Reply-wrapper">
+                  <div className="PostReply-main">
                     <div className="Comments" id={data["_id"]}>
                       <div className="Likes">
                         <div className="like">
@@ -392,9 +404,14 @@ function Content(props) {
                             className="dislike"
                             xmlns="http://www.w3.org/2000/svg"
                             onClick={() => {
-                              onDislike(data["_id"], data["score"], {
-                                headers: token,
-                              }, CurrUser);
+                              onDislike(
+                                data["_id"],
+                                data["score"],
+                                {
+                                  headers: token,
+                                },
+                                CurrUser
+                              );
                             }}
                           >
                             <path
@@ -413,12 +430,75 @@ function Content(props) {
                             {userName(data["username"], navigate)}
                           </div>
                           <p className="date">{data["createdAt"]}</p>
+                          {screen < 500 && (
+                            <div className="deets-m">
+                              <span>
+                                <img
+                                  alt=""
+                                  src={require("../images/deets.png")}
+                                  className="deets-img"
+                                  onClick={() => {
+                                    mobileDeets(index);
+                                  }}
+                                ></img>
+                              </span>
+                              <ul
+                                className={
+                                  MobileDeets.deetsId === index &&
+                                  MobileDeets.deets
+                                    ? "deets-opt active"
+                                    : "deets-opt"
+                                }
+                              >
+                                {props.validation && (
+                                  <>
+                                    <li>Reply</li>
+                                    {CurrUser === data["username"] && (
+                                      <>
+                                        <li
+                                          onClick={() => {
+                                            setMobileDeets({})
+                                            setEditModal({
+                                              edit: true,
+                                              id: index,
+                                            });
+                                          }}
+                                        >
+                                          Edit
+                                        </li>
+                                        <li
+                                          style={{}}
+                                          onClick={() => {
+                                            setMobileDeets({})
+                                            DeleteConfirmation(
+                                              data["_id"],
+                                              "post"
+                                            );
+                                          }}
+                                        >
+                                          Delete
+                                        </li>
+                                      </>
+                                    )}
+                                  </>
+                                )}
+                              </ul>
+                            </div>
+                          )}
                         </div>
                         <div
                           className="content-container"
                           onClick={clickHandler}
                         >
                           {check_content(data["content"]).props.children}
+                          {EditModal.edit && EditModal.id === index && 
+                            <div className="edit-container">
+                              <textarea className="edit-textarea"></textarea>
+                              <button className="edit-btn" onClick={() => {edit(data["_id"])}}>Update</button>
+                              <button className="edit-cancel" onClick={() => {setEditModal({})}}>Cancel</button>
+                            </div>
+                          }
+                    
                           <img
                             src={data["image"]}
                             className="image-content"
@@ -426,89 +506,83 @@ function Content(props) {
                         </div>
                       </div>
                     </div>
-                    <ul className="deets">
-                      <li
-                        className={
-                          Deets.index === index && Deets.id === data["_id"]
-                            ? "active"
-                            : ""
-                        }
-                        style={{ backgroundColor: "lightblue" }}
-                        onClick={() => {
-                          reply(index);
-                        }}
-                        onMouseOver={() => {
-                          setDeets({ index: index, id: data["_id"] });
-                        }}
-                        onMouseOut={() => {
-                          setDeets(-1);
-                        }}
-                      >
-                        Reply
-                      </li>
-                      {props.validation && CurrUser === data["username"] ? (
+                    {screen > 500 && (
+                      <ul className="deets-l">
+                        <li
+                          className={
+                            Deets.index === index && Deets.id === data["_id"]
+                              ? "active"
+                              : ""
+                          }
+                          style={{ backgroundColor: "lightblue" }}
+                          onClick={() => {
+                            reply(index);
+                          }}
+                          onMouseOver={() => {
+                            setDeets({ index: index, id: data["_id"] });
+                          }}
+                          onMouseOut={() => {
+                            setDeets(-1);
+                          }}
+                        >
+                          Reply
+                        </li>
                         <>
-                          <li
-                            className={
-                              Deets.index === index + 1 &&
-                              Deets.id === data["_id"]
-                                ? "active"
-                                : ""
-                            }
-                            style={{ backgroundColor: "limegreen" }}
-                            onClick={() => {
-                              Edit(data["_id"]);
-                            }}
-                            onMouseOver={() => {
-                              setDeets({ index: index + 1, id: data["_id"] });
-                            }}
-                            onMouseOut={() => {
-                              setDeets(-1);
-                            }}
-                          >
-                            Edit
-                          </li>
-                          <li
-                            className={
-                              Deets.index === index + 2 &&
-                              Deets.id === data["_id"]
-                                ? "active"
-                                : ""
-                            }
-                            style={{ backgroundColor: "#FF928E" }}
-                            onClick={() => {
-                              DeleteConfirmation(data["_id"], "post");
-                            }}
-                            onMouseOver={() => {
-                              setDeets({ index: index + 2, id: data["_id"] });
-                            }}
-                            onMouseOut={() => {
-                              setDeets(-1);
-                            }}
-                          >
-                            Delete
-                          </li>
+                          {props.validation && CurrUser === data["username"] ? (
+                            <>
+                              <li
+                                className={
+                                  Deets.index === index + 1 &&
+                                  Deets.id === data["_id"]
+                                    ? "active"
+                                    : ""
+                                }
+                                style={{ backgroundColor: "limegreen" }}
+                                onClick={() => {
+                                  edit(data["_id"]);
+                                }}
+                                onMouseOver={() => {
+                                  setDeets({
+                                    index: index + 1,
+                                    id: data["_id"],
+                                  });
+                                }}
+                                onMouseOut={() => {
+                                  setDeets(-1);
+                                }}
+                              >
+                                Edit
+                              </li>
+                              <li
+                                className={
+                                  Deets.index === index + 2 &&
+                                  Deets.id === data["_id"]
+                                    ? "active"
+                                    : ""
+                                }
+                                style={{ backgroundColor: "#FF928E" }}
+                                onClick={() => {
+                                  DeleteConfirmation(data["_id"], "post");
+                                }}
+                                onMouseOver={() => {
+                                  setDeets({
+                                    index: index + 2,
+                                    id: data["_id"],
+                                  });
+                                }}
+                                onMouseOut={() => {
+                                  setDeets(-1);
+                                }}
+                              >
+                                Delete
+                              </li>
+                            </>
+                          ) : (
+                            <></>
+                          )}
                         </>
-                      ) : (
-                        <></>
-                      )}
-                      <li
-                        className={
-                          Deets.index === index + 3 && Deets.id === data["_id"]
-                            ? "active"
-                            : ""
-                        }
-                        style={{ backgroundColor: "yellow" }}
-                        onMouseOver={() => {
-                          setDeets({ index: index + 3, id: data["_id"] });
-                        }}
-                        onMouseOut={() => {
-                          setDeets(-1);
-                        }}
-                      >
-                        Share
-                      </li>
-                    </ul>
+                      </ul>
+                    )}
                   </div>
                   {Reply.reply && Reply.index === index ? (
                     <ReplyCont
@@ -526,7 +600,7 @@ function Content(props) {
                     DeleteConfirmation={DeleteConfirmation}
                     CurrUser={CurrUser}
                     reply={reply}
-                    Edit={Edit}
+                    Edit={edit}
                     MainData={MainDisplay}
                     commentId={data["_id"]}
                     clickHandler={clickHandler}
@@ -546,12 +620,12 @@ function Content(props) {
 function Home() {
   const { state } = useLocation();
   const [validation, setValidation] = useState(
-    JSON.parse(sessionStorage.getItem("SignedIn"))
+    validate(localStorage.getItem("token")).login
   );
   const [MainData, setMainData] = useState();
   var CurrUser;
   if (validation) {
-    CurrUser = validate(localStorage.getItem("token"));
+    CurrUser = validate(localStorage.getItem("token")).username;
     token = {
       authorization: localStorage.getItem("token"),
     };
@@ -560,17 +634,16 @@ function Home() {
   React.useEffect(() => {
     socket.emit("content");
   }, []);
-  
+
   React.useEffect(() => {
     if (localStorage.getItem("token") === null) setValidation(false);
-    
+
     socket.once("get-data", (data) => {
       setMainData(data);
     });
 
     socket.once("Updated", (data) => {
-      setMainData(data)
-      
+      setMainData(data);
     });
   });
 

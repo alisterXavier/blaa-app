@@ -50,7 +50,7 @@ function SearchedContent() {
   const [EditModal, setEditModal] = useState({ edit: false, id: "" });
   const [Reply, setReply] = useState({ index: -1, reply: false });
   const token = localStorage.getItem("token");
-  const user = validate(token);
+  const user = validate(token).username;
 
   React.useEffect(() => {
     const data = { comments: [], users: [] };

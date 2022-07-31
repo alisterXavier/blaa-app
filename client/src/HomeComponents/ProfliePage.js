@@ -36,7 +36,7 @@ function Profile() {
   const token = {
     authorization: localStorage.getItem("token"),
   };
-  const CurrUser = validate(token.authorization);
+  const CurrUser = validate(token.authorization).username;
   const [ActiveContent, setActiveContent] = useState("posts");
   const [validation, setValidation] = useState(
     sessionStorage.getItem("SignedIn")

@@ -21,13 +21,15 @@ router.route("/login").post((req, res) => {
     });
   } else
     Users.find({ username: Username }, (err, data) => {
-      if (!err && data.length > 0) {
-        if (data[0].password === Password) {
-          token = genToken(Username);
-          res.json({ login: true, token: token, username: Username });
-        } else {
-          res.status(401).send({ login: false });
-        }
+      if (!err) {
+        if (data.length > 0) {
+          if (data[0].password === Password) {
+            token = genToken(Username);
+            res.json({ login: true, token: token, username: Username });
+          } else {
+            res.status(401).send({ login: false });
+          }
+        } else res.status(401).send({ login: false });
       }
     });
 });

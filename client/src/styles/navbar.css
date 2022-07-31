@@ -180,6 +180,7 @@
   position: fixed;
   background-color: rgba(0, 0, 0, 0.595);
   width: 100%;
+  width: 100%;
   top: 0%;
   bottom: 0%;
   left: 0%;
@@ -295,4 +296,27 @@
   width: 70px;
   transform: translateX(90px);
   transition: all 200ms ease;
+}
+
+@media only screen and (max-width: 800px){
+  #new-post.active{
+    height: 100%;
+  }
+  #new-post.active #textarea-container .post-container{
+    height: 40%;
+    width: 85%;
+  }
+  #new-post.active #textarea-container .post-container textarea{
+    font-size: 15px;
+  }
+  #new-post.active #textarea-container .post-container .button-container .Post-btn-container #Post-btn{
+    padding: 10px 15px;
+    font-size: 12px;
+  }
+  #new-post.active #textarea-container .post-container .button-container .Post-btn-container .upload-container label{
+    font-size: 10px;
+  }
+  #new-post.active #textarea-container .post-container .button-container .Post-btn-container .upload-container #fileSelected{
+    font-size: 10px;
+  }
 }

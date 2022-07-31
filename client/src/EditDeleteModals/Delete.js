@@ -17,6 +17,8 @@ function Delete(props) {
         axios.post(`${process.env.REACT_APP_baseServerurl}/user/${props.DeleteModal[2]}/delete/${props.DeleteModal[0].type}`, data, {headers: token})
         .then(res => {
             if(res.status){
+                props.DeleteModal[3]({})
+                props.DeleteModal[4]({})
                 if(props.DeleteModal[0].type === "reply")
                     NotificationManager.success("Reply Deleted Successfully!")
                 else

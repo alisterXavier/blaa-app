@@ -4,16 +4,16 @@
   min-height: 100%;
   height: fit-content;
 }
-.new{
+.new {
   animation: Update 200ms ease;
 }
 
 @keyframes Update {
-  0%{
+  0% {
     opacity: 0;
     transform: translateX(300px);
   }
-  100%{
+  100% {
     opacity: 1;
   }
 }
@@ -42,6 +42,17 @@
   padding: 50px 0px;
   align-items: center;
   color: var(--dark-text);
+}
+.PostReply-container .Post-Reply-wrapper {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.PostReply-container .Post-Reply-wrapper .PostReply-main {
+  display: flex;
+  width: 70%;
+  position: relative;
 }
 .PostReply-container .Comments {
   display: flex;
@@ -145,6 +156,7 @@
   border-radius: 50px;
 }
 .PostReply-container .Comments .Comment-Header .content-container {
+  position: relative;
   border-top: var(--dark-underline);
   width: 100%;
   padding: 20px;
@@ -163,6 +175,36 @@
 .PostReply-container .Comments .Comment-Header .content-container p a:hover {
   color: var(--dark-uname);
 }
+.PostReply-container .Comments .Comment-Header .content-container .edit-container{
+  /* width: 100%;
+  height: 100%; */
+  /* padding: 10px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: flex-end;
+  border: 1px solid white;
+}
+.PostReply-container .Comments .Comment-Header .content-container .edit-textarea{
+  background-color: black;
+  width: 80%;
+  padding: 15px;
+  font-size: 15px;
+  color: white;
+  border: none;
+  margin: 10px 0px;
+  height: 100%;
+  outline: none;
+}
+.PostReply-container .Comments .Comment-Header .content-container .edit-btn
+  ,.PostReply-container .Comments .Comment-Header .content-container .edit-cancel{
+  border: none;
+  padding: 10px;
+  margin: 10px 0px;
+  color: white;
+  background: none;
+}
+
 .PostReply-container
   .Comments
   .Comment-Header
@@ -171,7 +213,7 @@
   max-width: 90%;
   height: 80%;
 }
-.PostReply-container .deets {
+.PostReply-container .deets-l {
   position: absolute;
   display: flex;
   text-align: center;
@@ -179,7 +221,7 @@
   right: 0%;
   height: fit-content;
 }
-.PostReply-container .deets li {
+.PostReply-container .deets-l li {
   margin: 0px 1px;
   width: 50px;
   padding: 10px;
@@ -188,7 +230,7 @@
   transform: translateY(-15px);
   transition: all 200ms ease;
 }
-.PostReply-container .deets li.active {
+.PostReply-container .deets-l li.active {
   transition: all 200ms ease;
   transform: translateY(-40px);
   cursor: pointer;
@@ -284,64 +326,6 @@
 .Delete-confirmation button:hover {
   color: black;
   background-color: var(--dark-uname);
-}
-
-/* Edit */
-.edit {
-  position: fixed;
-  z-index: 2;
-  top: 25%;
-  left: 30%;
-  display: flex;
-  width: 100%;
-  height: 100%;
-}
-.edit::after {
-  content: "";
-  background-color: rgba(0, 0, 0, 0.679);
-  z-index: -1;
-  position: inherit;
-  top: 0%;
-  bottom: 0%;
-  left: 0%;
-  right: 0%;
-}
-.edit .new {
-  width: 70%;
-  height: 70%;
-}
-.edit .new div {
-  width: 70%;
-  height: 70%;
-  display: flex;
-  justify-content: space-evenly;
-}
-.edit .new div textarea {
-  border: 1px solid blue;
-  color: white;
-  background-color: black;
-  width: 70%;
-  height: 70%;
-  padding: 30px;
-  font-size: 20px;
-  border-radius: 5px;
-  resize: none;
-  box-shadow: none;
-  outline: none;
-}
-.edit .new div button {
-  cursor: pointer;
-  font-size: large;
-  margin-top: 10%;
-  width: 10%;
-  height: 15%;
-  border: 1px solid white;
-  color: white;
-  border-radius: 5px;
-  background-color: black;
-}
-.edit .new div button:active {
-  background-color: rgb(0, 132, 255);
 }
 
 /* Reply */
@@ -766,10 +750,10 @@
   padding: 10px;
   font-size: 15px;
 }
-.chat-container .contacts .GoDoS .show-all-groups{
+.chat-container .contacts .GoDoS .show-all-groups {
   display: none;
 }
-.chat-container .contacts .GoDoS .show-all-groups.active{
+.chat-container .contacts .GoDoS .show-all-groups.active {
   display: block;
   position: absolute;
   background-color: rgba(0, 0, 0, 0.829);
@@ -826,7 +810,6 @@
   transition: 500ms opacity ease;
   transform: translateY(10%);
   border-radius: 5px;
-  
 }
 .chat-container .conversationsContainer .deets .options p {
   position: absolute;
@@ -839,28 +822,28 @@
   padding: 10px;
   cursor: pointer;
 }
-.chat-container .conversationsContainer .deets .options.active p{
+.chat-container .conversationsContainer .deets .options.active p {
   transition: all 200ms ease;
 }
 .chat-container .conversationsContainer .deets .options .exit {
-  top: 0%; 
+  top: 0%;
 }
 .chat-container .conversationsContainer .deets .options .exit.active {
-  top: 70%; 
+  top: 70%;
 }
 .chat-container .conversationsContainer .deets .options .edit-name {
   top: 0%;
 }
 .chat-container .conversationsContainer .deets .options .edit-name {
-top: 35%;
+  top: 35%;
 }
-#change-name-container{
+#change-name-container {
   position: relative;
 }
-#change-name{
+#change-name {
   display: none;
 }
-#change-name-container #change-name.active{
+#change-name-container #change-name.active {
   position: absolute;
   top: 0%;
   width: 100%;
@@ -887,16 +870,16 @@ top: 35%;
   width: 100%;
   height: 100%;
 }
-.chat-container .GoDoS .add-options #group-options{
+.chat-container .GoDoS .add-options #group-options {
   display: none;
 }
-.chat-container .GoDoS .add-options #group-options.active{
+.chat-container .GoDoS .add-options #group-options.active {
   display: block;
   font-size: 16px;
   padding-left: 20px;
   list-style: square;
 }
-.chat-container .GoDoS .add-options li{
+.chat-container .GoDoS .add-options li {
   cursor: pointer;
 }
 .chat-container .conversationsContainer .text-send-container {
@@ -904,7 +887,7 @@ top: 35%;
   border-top: 1px solid white;
   height: fit-content;
   position: relative;
-  /* z-index: 1; */
+  z-index: 1;
 }
 .chat-container .conversationsContainer .text-bar {
   color: var(--dark-text);
@@ -963,7 +946,11 @@ top: 35%;
   margin-bottom: 25px;
   color: var(--dark-text);
 }
-.chat-container .conversationsContainer .conversations .message-container .super-ordinal{
+.chat-container
+  .conversationsContainer
+  .conversations
+  .message-container
+  .super-ordinal {
   vertical-align: text-top;
   font-size: 12px;
 }
@@ -1060,4 +1047,158 @@ top: 35%;
   --dark-like-border: 3px solid white;
   --dark-like: darkorange;
   --dark-dislike: darkorange;
+}
+
+@media only screen and (max-width: 700px) {
+  .PostReply-container .Post-Reply-wrapper {
+    width: 90%;
+  }
+  .PostReply-container .Post-Reply-wrapper .PostReply-main {
+    width: 90%;
+  }
+  .PostReply-container .Post-Reply-wrapper .PostReply-main .Comment-Header {
+    padding: 0%;
+    margin: 0%;
+  }
+  .PostReply-container .Comments:hover {
+    box-shadow: none;
+  }
+  .PostReply-container .Post-Reply-wrapper .PostReply-main .Comments {
+    position: relative;
+  }
+  .PostReply-container
+    .Post-Reply-wrapper
+    .PostReply-main
+    .Comment-Header
+    .Comment-info {
+    position: relative;
+    padding: 0%;
+    width: 100%;
+  }
+  .PostReply-container
+    .Post-Reply-wrapper
+    .PostReply-main
+    .Comment-Header
+    .Comment-info
+    .inner-header {
+    padding: 0%;
+  }
+  .PostReply-container
+    .Post-Reply-wrapper
+    .PostReply-main
+    .Comment-Header
+    .Comment-info
+    .inner-header
+    div {
+    width: 70%;
+  }
+  .PostReply-container
+    .Post-Reply-wrapper
+    .PostReply-main
+    .Comment-Header
+    .Comment-info
+    .inner-header
+    div
+    img {
+    width: 40px;
+  }
+  .PostReply-container
+    .Post-Reply-wrapper
+    .PostReply-main
+    .Comment-Header
+    .Comment-info
+    .date {
+    font-size: x-small;
+    height: fit-content;
+  }
+  .PostReply-container
+    .Post-Reply-wrapper
+    .PostReply-main
+    .Comment-Header
+    .Comment-info
+    .deets-m {
+    position: absolute;
+    z-index: 1;
+    top: 5%;
+    left: 100%;
+    padding: 0%;
+    margin: 0%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .PostReply-container
+    .Post-Reply-wrapper
+    .PostReply-main
+    .Comment-Header
+    .Comment-info
+    .deets-m
+    .deets-img {
+    width: 30px;
+  }
+  .PostReply-container
+    .Post-Reply-wrapper
+    .PostReply-main
+    .Comment-Header
+    .Comment-info
+    .deets-m
+    .deets-opt {
+    display: none;
+    position: absolute;
+    top: 0%;
+    right: 100%;
+    height: 0px;
+    padding: 10px;
+  }
+  .PostReply-container
+    .Post-Reply-wrapper
+    .PostReply-main
+    .Comment-Header
+    .Comment-info
+    .deets-m
+    .deets-opt.active {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    align-items: center;
+    background-color: black;
+    width: fit-content;
+    height: fit-content;
+    border: 1px solid white;
+  }
+  .PostReply-container
+    .Post-Reply-wrapper
+    .PostReply-main
+    .Comment-Header
+    .Comment-info
+    .deets-m
+    .deets-opt.active
+    li {
+    padding: 10px;
+    margin: 0px;
+  }
+  .PostReply-container .Post-Reply-wrapper .PostReply-main .Comments {
+    padding: 10px;
+    align-items: center;
+    flex-direction: column-reverse;
+  }
+  .PostReply-container .Post-Reply-wrapper .PostReply-main .Comments .Likes {
+    display: flex;
+    width: 50%;
+    height: 10%;
+    flex-direction: row;
+    border: none;
+  }
+  .PostReply-container .Post-Reply-wrapper .PostReply-main .Comments .like,
+  .PostReply-container
+    .Post-Reply-wrapper
+    .PostReply-main
+    .Comments
+    .Likes
+    .dislike {
+    width: 10px;
+  }
+  .Delete-confirmation {
+    width: 80%;
+  }
 }
