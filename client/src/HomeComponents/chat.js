@@ -482,7 +482,6 @@ function Conversations(props) {
     <>
       {Convo !== null && Convo !== undefined ? (
         <>
-        {console.log(Convo)}
           {Convo.map((c) => {
             return (
               <div
