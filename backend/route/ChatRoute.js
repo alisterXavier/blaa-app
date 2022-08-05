@@ -196,7 +196,7 @@ router.post("/send-Group-text/:id", (req, res) => {
   );
 });
 
-router.get("/get-convo/:type/:id", (req, res) => {
+router.post("/get-convo/:type/:id", (req, res) => {
   const { id, type } = req.params;
   if (type === "Group")
     Group.findById(id, (err, save) => {

@@ -463,7 +463,7 @@ function Conversations(props) {
 
   React.useEffect(() => {
     axios
-      .get(
+      .post(
         url + `/get-convo/${props.DisplayConvo.type}/${props.DisplayConvo.id}`,
         { headers: token }
       )
@@ -482,6 +482,7 @@ function Conversations(props) {
     <>
       {Convo !== null && Convo !== undefined ? (
         <>
+        {console.log(Convo)}
           {Convo.map((c) => {
             return (
               <div
