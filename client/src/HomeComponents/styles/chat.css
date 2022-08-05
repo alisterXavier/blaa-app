@@ -1,0 +1,362 @@
+.chat-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--dark-text);
+  max-height: 100vh;
+  width: 100%;
+}
+.chat-container .contacts {
+  display: flex;
+  flex-direction: column;
+  height: 70%;
+  width: 90%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 80px black;
+}
+.chat-container .contacts header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 10%;
+  border-bottom: 1px solid grey;
+}
+.chat-container .contacts header div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.chat-container .contacts header div:nth-child(1) {
+  border-radius: 10px 0px 0px 0px;
+
+}
+.chat-container .contacts header div:nth-child(3) {
+  border-radius: 0px 10px 0px 0px;
+}
+.chat-container .contacts header div:hover {
+  background-color: orange;
+  color: black;
+  cursor: pointer;
+}
+.chat-container .contacts .GoDoS {
+  height: 90%;
+  padding: 10px 5px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.chat-container .contacts .GoDoS .username{
+  margin-top: 30px;
+}
+.chat-container .contacts .GoDoS .search-users {
+  padding: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.chat-container .contacts .GoDoS .users {
+  padding: 10px;
+}
+.chat-container .contacts .GoDoS .users .username {
+  margin: 0;
+}
+.chat-container .contacts .GoDoS .search-users input {
+  width: 80%;
+  height: 100%;
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 10px;
+  background-color: grey;
+  outline: none;
+  border: none;
+}
+.chat-container .contacts .GoDoS .show-all-groups {
+  display: none;
+}
+.chat-container .contacts .GoDoS .show-all-groups.active {
+  display: block;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.829);
+  /* z-index: 1; */
+  top: 10%;
+  padding: 30px;
+  width: 80vw;
+  height: 50vh;
+}
+.chat-container .conversationsContainer {
+  background-color: transparent;
+  display: flex;
+  box-shadow: 0px 0px 80px black;
+  flex-direction: column;
+  height: 80%;
+  width: 90%;
+}
+.chat-container .conversationsContainer .convoName {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  min-height: 5%;
+  border-bottom: 1px solid white;
+}
+.chat-container .conversationsContainer .deets {
+  position: relative;
+  display: flex;
+  justify-content: end;
+}
+.chat-container .conversationsContainer .deets .deets-logo {
+  width: 30px;
+  cursor: pointer;
+  fill: orange;
+}
+.chat-container .conversationsContainer .deets .deets-logo:hover {
+  fill: darkorange;
+}
+.chat-container .conversationsContainer .deets .options {
+  opacity: 0;
+  position: absolute;
+  top: -100vh;
+  right: 100%;
+  width: 140px;
+  height: 140px;
+  font-size: 15px;
+  margin: 0%;
+  color: white;
+  list-style: none;
+}
+.chat-container .conversationsContainer .deets .options.active {
+  position: absolute;
+  display: block;
+  opacity: 1;
+  top: 100%;
+  transition: 500ms opacity ease;
+  transform: translateY(10%);
+  border-radius: 5px;
+}
+.chat-container .conversationsContainer .deets .options p {
+  position: absolute;
+  top: 0%;
+  width: 85%;
+  border: 1px solid white;
+  border-radius: 5px;
+  text-align: center;
+  background-color: var(--dark-background);
+  padding: 10px;
+  cursor: pointer;
+}
+.chat-container .conversationsContainer .deets .options.active p {
+  transition: all 200ms ease;
+}
+.chat-container .conversationsContainer .deets .options .exit {
+  top: 0%;
+}
+.chat-container .conversationsContainer .deets .options .exit.active {
+  top: 70%;
+}
+.chat-container .conversationsContainer .deets .options .edit-name {
+  top: 0%;
+}
+.chat-container .conversationsContainer .deets .options .edit-name {
+  top: 35%;
+}
+#change-name-container {
+  position: relative;
+}
+#change-name {
+  display: none;
+}
+#change-name-container #change-name.active {
+  position: absolute;
+  top: 0%;
+  width: 100%;
+  border-radius: 5px;
+  padding: 5px 10px;
+  color: white;
+  display: block;
+  background-color: var(--dark-background);
+}
+.chat-container .conversationsContainer .deets .options p:hover {
+  background-color: darkorange;
+}
+.chat-container .conversationsContainer .conversations {
+  min-height: 70%;
+  padding: 20px 10px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column-reverse;
+}
+.chat-container .GoDoS .add-options {
+  list-style: none;
+  font-size: 20px;
+  width: 100%;
+  height: 100%;
+}
+.chat-container .GoDoS .add-options #group-options {
+  display: none;
+}
+.chat-container .GoDoS .add-options #group-options.active {
+  display: block;
+  font-size: 16px;
+  padding-left: 20px;
+  list-style: square;
+}
+.chat-container .GoDoS .add-options li {
+  margin: 10px 0px ;
+  cursor: pointer;
+}
+.chat-container .conversationsContainer .text-send-container {
+  border-radius: 0px 0px 5px 5px;
+  border-top: 1px solid white;
+  height: fit-content;
+  position: relative;
+  z-index: 1;
+}
+.chat-container .conversationsContainer .text-bar {
+  color: var(--dark-text);
+  font-size: larger;
+  width: 90%;
+  height: fit-content;
+  border: none;
+  background-color: var(--dark-background);
+  padding: 20px;
+  line-height: 25px;
+  resize: none;
+  overflow-x: scroll;
+  outline: none;
+}
+.chat-container .conversationsContainer .send-btn {
+  width: 10%;
+  color: var(--dark-text);
+  font-size: 25px;
+  border: none;
+  border-radius: 0px 0px 5px 0px;
+  background-color: orange;
+}
+.chat-container .conversationsContainer .send-btn:active {
+  font-size: larger;
+}
+.chat-container .conversationsContainer .upload-container {
+  position: absolute;
+  margin-left: 1%;
+  top: 0%;
+  transition: top 200ms ease;
+}
+.chat-container .conversationsContainer .upload-container:hover {
+  transition: top 200ms ease-in;
+  top: -35%;
+}
+.chat-container .conversationsContainer .upload-container label {
+  padding: 10px 35px;
+  font-size: large;
+  border: none;
+  background-color: darkorange;
+  cursor: pointer;
+}
+.chat-container .conversationsContainer .upload-container #fileSelected {
+  position: absolute;
+  color: var(--dark-text);
+  width: 100px;
+  white-space: nowrap;
+  top: -140%;
+}
+.chat-container .conversationsContainer .conversations .message-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: fit-content;
+  margin-bottom: 25px;
+  color: var(--dark-text);
+}
+.chat-container
+  .conversationsContainer
+  .conversations
+  .message-container
+  .super-ordinal {
+  vertical-align: text-top;
+  font-size: 12px;
+}
+.chat-container
+  .conversationsContainer
+  .conversations
+  .message-container
+  .CurrUser-message {
+  background-color: darkorange;
+  padding: 10px;
+  border-radius: 5px;
+  height: fit-content;
+}
+.chat-container
+  .conversationsContainer
+  .conversations
+  .message-container
+  .sender-message {
+  background-color: crimson;
+  padding: 10px;
+  height: fit-content;
+  border-radius: 5px;
+}
+.chat-container
+  .conversationsContainer
+  .conversations
+  #Curruser-messageContainer {
+  align-items: flex-end;
+}
+.chat-container
+  .conversationsContainer
+  .conversations
+  #sender-messageContainer {
+  align-items: flex-start;
+}
+.chat-container
+  .conversationsContainer
+  .conversations
+  .message-container
+  .chat-img {
+  min-height: 100px;
+  max-width: 200px;
+}
+.chat-container
+  .conversationsContainer
+  .conversations
+  .message-container
+  .message {
+  margin: 0%;
+  text-align: end;
+}
+.chat-container
+  .conversationsContainer
+  .conversations
+  .message-container
+  .message-username {
+  margin: 0%;
+  font-size: small;
+}
+.chat-container
+  .conversationsContainer
+  .conversations
+  .message-container
+  .text-time {
+  margin: 0%;
+  font-size: x-small;
+}
+.chat-container
+  .conversationsContainer
+  .conversations
+  .message-container
+  .message-username,
+.chat-container
+  .conversationsContainer
+  .conversations
+  .message-container
+  .text-time {
+  color: grey;
+}
+
+@media only screen and (max-width: 800px){
+
+}

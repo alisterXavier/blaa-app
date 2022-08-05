@@ -1,8 +1,7 @@
 import React, { Profiler, useReducer, useRef, useState } from "react";
-import "../styles/HomePage1.css";
+import './styles/Delete.css'
 import axios from "axios";
 import { NotificationManager } from 'react-notifications';
-import { useParams } from "react-router-dom";
 
 const token = {
     authorization: localStorage.getItem("token"),

@@ -1,13 +1,15 @@
-import React, { useState } from "react";
-import "../styles/LoginPage.css";
+import React, { useContext, useState } from "react";
+import "./styles/LoginPage.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Validation } from "../Routes";
 
 let c = 0;
 if (localStorage.getItem("Mode") === "dark") c = 1;
 
 function LoginPage() {
   const navigate = useNavigate();
+  const validation = useContext(Validation);
   localStorage.removeItem("ActivePage");
   const mode = localStorage.getItem("Mode");
   const [Username, setUsername] = useState("");
@@ -89,20 +91,13 @@ function LoginPage() {
             setAuthentication(res.data.login);
             localStorage.setItem("token", res.data.token);
             sessionStorage.setItem("SignedIn", true);
+            validation[1](true);
           }
         })
         .catch((err) => {
           setAuthentication(false);
         });
     }
-  };
-
-  const handleover = () => {
-    document.getElementById("Text-gradient").classList.add("active");
-  };
-
-  const handleout = () => {
-    document.getElementById("Text-gradient").classList.remove("active");
   };
 
   const SwitchDark_Light = () => {
@@ -123,13 +118,15 @@ function LoginPage() {
 
     localStorage.setItem("Mode", Dark);
 
-    if (Authentication === true)
+    if (Authentication === true) {
+      console.log("as");
       setTimeout(() => {
         sessionStorage.setItem("SignedIn", "true");
         navigate(`user/${Username}`, {
           state: { validation: true, username: Username },
         });
       }, 2000);
+    }
 
     if (Dark === "light") {
       login.style.color = "var(--text-dark-color)";
@@ -159,6 +156,7 @@ function LoginPage() {
         .then((res) => {
           setAuthentication(res.data.login);
           setUsername(res.data.username);
+          validation[1](res.data.login)
         })
         .catch((err) => console.log(err));
     }
@@ -206,7 +204,6 @@ function LoginPage() {
                 version="1.1"
                 viewBox="0 0 32 32"
                 xmlns="http://www.w3.org/2000/svg"
-                onMouseOver={handleover}
                 onClick={handlePassVisibility}
               >
                 <g>
@@ -236,8 +233,12 @@ function LoginPage() {
               <button
                 id="Account-btn"
                 onClick={handleClick}
-                onMouseOver={handleover}
-                onMouseOut={handleout}
+                onMouseOver={() => {document.getElementById("Text-gradient").classList.add("active");}}
+                onMouseOut={() => {
+                  document
+                    .getElementById("Text-gradient")
+                    .classList.remove("active");
+                }}
               >
                 <span id="Text-gradient">Login</span>
               </button>

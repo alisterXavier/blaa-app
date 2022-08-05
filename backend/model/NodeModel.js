@@ -7,7 +7,7 @@ let userData = new mongoose.Schema({
   main: {type: String},
   username: { type: String, required: true },
   content: { type: String, required: true },
-  image: { type: String },
+  image: { type: String, default: null },
   createdAt: { type: String, required: true, default: new Date() },
   score: [{ type: String }],
   replies: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
@@ -26,7 +26,7 @@ let UserDirectMessages = new mongoose.Schema({
   conversation: [{
     user: {type: "String"},
     text: {type: "String"},
-    image: {type: "String"},
+    image: {type: "String", default: null},
     time: {type:"String" }
   }]
 })
@@ -37,7 +37,7 @@ let UserGroupMessages = new mongoose.Schema({
   conversation: [{
     user: {type: "String"},
     text: {type: "String"},
-    image: {type: "String"},
+    image: {type: "String", default: null},
     time: {type:"String" }
   }]
 })

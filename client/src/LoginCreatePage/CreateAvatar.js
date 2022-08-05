@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import "../styles/CreatePage.css";
+import "./styles/CreatePage.css";
 import { useNavigate } from "react-router-dom";
-const jsonData = require("./avatars.json");
+const jsonData = require("../avatars/avatars.json");
 
 var url = null;
 function CreateAvatar(props) {

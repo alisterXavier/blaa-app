@@ -1,52 +1,52 @@
 import React, { Profiler, useReducer, useRef, useState } from "react";
-// import "./HomePage.css";
-import "../styles/HomePage1.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import "./styles/Edit.css";
 import axios from "axios";
 import { NotificationManager } from "react-notifications";
 
-const token = {
-  authorization: localStorage.getItem("token"),
-};
-
 function EditContent(props) {
-  const [Content, setContent] = useState("");
-
+  const token = {
+    authorization: localStorage.getItem("token"),
+  };
+  const [Content, setContent] = useState();
+  const edit = useRef(null);
   const handleChange = (e) => {
     const { value } = e.target;
     setContent(value);
   };
 
   const onClose = (e) => {
-    if (e.target.className === "edit") {
-      props.EditModal[1]({ edit: false });
-    }
+    edit.current.style.animation = "slide-out 500ms ease";
+    setTimeout(() => {
+      props.Edit[1]({ edit: false });
+    }, 400);
   };
 
   const handleClick = () => {
-    const data = {
-      id: props.EditModal[0].id,
-      Content: Content,
-    };
-    axios
-      .post(
-        process.env.REACT_APP_baseServerurl +
-          `/user/${props.EditModal[0].id}/edit`,
-        data,
-        { headers: token }
-      )
-      .then((res) => {
-        if (res.status) {
-          props.EditModal[2]({});
-          props.EditModal[3]({});
-          NotificationManager.success("Post Edited Successfully!");
-          props.EditModal[1](false);
-        }
-      });
+    if (Content.legth > 0) {
+      const data = {
+        id: props.Edit[0].id,
+        Content: Content,
+      };
+      axios
+        .post(
+          process.env.REACT_APP_baseServerurl +
+            `/user/${props.Edit[0].id}/edit`,
+          data,
+          { headers: token }
+        )
+        .then((res) => {
+          if (res.status) {
+            props.Edit[1]({});
+            NotificationManager.success("Post Edited Successfully!");
+          }
+        });
+    }
   };
   return (
-    <div className="edit" onClick={onClose}>
-      <div className="new">
-        {/* <div> */}
+    <div className="edit slide-in" ref={edit}>
+      <label>
         <textarea
           id="content"
           placeholder="Enter Text...."
@@ -54,21 +54,12 @@ function EditContent(props) {
           onChange={handleChange}
         ></textarea>
         <div className="edit-btn-container">
-          <p
-            onClick={() => {
-              props.EditModal[1]({});
-            }}
-          >
-            Cancel
-          </p>
-          <div>
-            <button id="Post-btn" onClick={handleClick}>
-              Edit
-            </button>
-          </div>
+          <p onClick={onClose}>Cancel</p>
+          <button id="Post-btn" onClick={handleClick}>
+            <FontAwesomeIcon icon={faPaperPlane} />
+          </button>
         </div>
-        {/* </div> */}
-      </div>
+      </label>
     </div>
   );
 }

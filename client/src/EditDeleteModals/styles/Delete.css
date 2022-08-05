@@ -1,0 +1,59 @@
+/* Delete */
+.Delete-confirmation {
+  position: fixed;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  top: 25%;
+  color: white;
+  background-color: black;
+  outline: 1px solid orange;
+  box-shadow: var(--dark-box-shadow);
+  border-radius: 5px;
+}
+.Delete-confirmation::before {
+  content: "";
+  z-index: -1;
+  background-color: rgba(0, 0, 0, 0.786);
+  position: fixed;
+  top: 0%;
+  bottom: 0%;
+  right: 0%;
+  left: 0%;
+}
+.Delete-confirmation p {
+  margin: 20px 5px 20px 5px;
+}
+.Delete-confirmation span {
+  margin: 20px 5px 20px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 70%;
+}
+.Delete-confirmation button {
+  color: white;
+  text-align: start;
+  padding: 10px 20px;
+  margin: 10px;
+  cursor: pointer;
+  width: 60px;
+  height: 40px;
+  background-color: transparent;
+  border-radius: 5px;
+  border: none;
+  /* border: 1px solid white; */
+}
+.Delete-confirmation button:hover {
+  color: black;
+  background-color: var(--dark-uname);
+}
+
+@media only screen and (max-width: 700px) {
+  .Delete-confirmation {
+    width: 80%;
+  }
+}

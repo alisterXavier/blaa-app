@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import socket from "../Socket";
-import obj from "../token";
 import { validate } from "../token";
-import { UploadImg } from "../Functions";
+import { debounce, UploadImg } from "../Functions";
 import NavBar from "./Navbar";
-import Loading from "../Loading/Load";
+import { Loading } from "../Loading/Load";
 import { NotificationManager } from "react-notifications";
+import { Screen } from "../Routes";
+import "./styles/chat.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 var CurrUser = validate(localStorage.getItem("token")).username;
 var token;
@@ -21,40 +24,38 @@ export const addDm = async (e, username) => {
     users: [CurrUser, username],
   };
 
-  return await axios.post(url + `/add/${id}`, data, { headers: token }).status;
+  axios.post(url + `/add/${id}`, data, { headers: token }).then((res) => {
+    if (res.status) NotificationManager.success("Created Group");
+  });
 };
 
 function AddToGroup(props) {
   const [allGps, setAllGps] = useState(null);
   React.useEffect(() => {
     socket.emit("chat-groups", CurrUser);
-    const receiveConvo = async () => {
-      await socket.once("receive-group-chats", (data) => {
-        setAllGps(
-          data.map((d) => {
-            for (const m in d.usersInvolved)
-              if (d.usersInvolved[m].username.includes(CurrUser)) return d;
-          })
-        );
-      });
-    };
-    receiveConvo();
+    socket.once("receive-group-chats", (data) => {
+      setAllGps(data);
+    });
   }, []);
-  const add = (e, name, usersInvolved) => {
-    const { id, className } = e.currentTarget;
+  const add = (e, name, id) => {
     const data = {
       gpName: name,
       username: props.username,
-      usernames: usersInvolved.map((u) => u.username),
+      id: id,
     };
 
-    axios.post(url + `/add/${id}`, data, { headers: token }).then((res) => {
-      if (res.status) return res.status;
+    axios.post(url + `/add/addTo`, data, { headers: token }).then((res) => {
+      if (res.status) {
+        document
+          .getElementsByClassName("show-all-groups")[0]
+          .classList.toggle("active");
+        NotificationManager.success("Successfully Added to group");
+      }
     });
   };
   return (
     <div className="show-all-groups">
-      {allGps !== null ? (
+      {allGps !== null && allGps !== undefined ? (
         allGps.map((g) => {
           return (
             <div
@@ -67,15 +68,15 @@ function AddToGroup(props) {
                 paddingBottom: "10px",
                 marginLeft: "10px",
                 marginRight: "10px",
-                borderBottom: "1px solid white",
+                borderBottom: ".5px solid grey",
                 height: "fit-content",
               }}
               onClick={(e) => {
-                add(e, g.name, g.usersInvolved);
+                add(e, g.name, g.id);
               }}
             >
               <div style={{ borderRadius: "50px" }}>
-                {g.usersInvolved.map((u) => {
+                {g.users.map((u) => {
                   return (
                     <>
                       <img src={u.avatar} width="20px"></img>
@@ -99,8 +100,8 @@ function AddToGroup(props) {
 function Options(props) {
   const handleClick = async (e) => {
     const { id } = e.target;
-    const res = await addDm(e, props.username);
-    if (res) props.Type(id);
+    addDm(e, props.username);
+    props.Type(id);
   };
   return (
     <>
@@ -119,13 +120,7 @@ function Options(props) {
             Add to group
           </span>
           <ul id="group-options">
-            <li
-              id="createGroup"
-              className="Group"
-              onClick={(e) => {
-                addDm(e, props.username);
-              }}
-            >
+            <li id="createGroup" className="Group" onClick={handleClick}>
               Create group
             </li>
             <li
@@ -174,9 +169,9 @@ function ConversationName(props) {
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             edit_group_name();
-            document.getElementById("change-name").classList.remove("active")
-            document.getElementById("convoName").innerHTML = Toname
-            setToname(null)
+            document.getElementById("change-name").classList.remove("active");
+            document.getElementById("convoName").innerHTML = Toname;
+            setToname(null);
           }
         }}
         placeholder={props.convoName}
@@ -189,27 +184,25 @@ function Direct(props) {
   const [Direct, setDirect] = useState(null);
 
   React.useEffect(() => {
-    socket.emit("chat-Direct", CurrUser);
+    socket.emit("chat-direct", CurrUser);
+    socket.once("receive-direct-chats", (data) => {
+      setDirect(data);
+    });
   }, []);
 
   React.useEffect(() => {
-    socket.once("receive-direct-chats", (data) => {
-      setDirect(
-        data.map((d) => {
-          for (const m in d.usersInvolved)
-            if (d.usersInvolved[m].username.includes(CurrUser)) return d;
-        })
-      );
+    socket.once(`${CurrUser}-direct-chats`, (data) => {
+      setDirect(data);
     });
-  }, []);
+  });
 
-  const Dm = (e) => {
+  const Dm = (e, id) => {
     props.DisplayConvo[1]({
       type: "Direct",
       username: [CurrUser, e.currentTarget.innerText],
+      id: id,
     });
     props.convoName(e.currentTarget.innerText);
-    props.convo(null);
   };
   return (
     <div className="Direct">
@@ -224,11 +217,13 @@ function Direct(props) {
                 paddingBottom: "10px",
                 marginLeft: "10px",
                 marginRight: "10px",
-                borderBottom: "1px solid white",
+                borderBottom: ".5px solid grey",
               }}
-              onClick={Dm}
+              onClick={(e) => {
+                Dm(e, d["_id"]);
+              }}
             >
-              {d.usersInvolved.map((u) => {
+              {d.map((u) => {
                 if (u.username !== CurrUser) {
                   return (
                     <>
@@ -254,54 +249,35 @@ function Group(props) {
   const [Groups, setGroups] = useState(null);
 
   React.useEffect(() => {
-    if (props.RecievedGroups === null) {
-      socket.emit("chat-groups", CurrUser);
-      const receiveConvo = async () => {
-        await socket.once("receive-group-chats", (data) => {
-          setGroups(
-            data.map((d) => {
-              for (const m in d.usersInvolved)
-                if (d.usersInvolved[m].username.includes(CurrUser)) return d;
-            })
-          );
-        });
-      };
-      receiveConvo();
-    } else {
-      setGroups(
-        props.RecievedGroups.map((d) => {
-          for (const m in d.usersInvolved)
-            if (d.usersInvolved[m].username.includes(CurrUser)) return d;
-        })
-      );
-    }
-  }, [props.RecievedGroups]);
+    socket.emit("chat-groups", CurrUser);
+    const receiveConvo = async () => {
+      await socket.once("receive-group-chats", (data) => {
+        setGroups(data);
+      });
+    };
+    receiveConvo();
+  }, []);
 
   React.useEffect(() => {
-    socket.once("receive-group-chats", (data) => {
-      setGroups(
-        data.map((d) => {
-          for (const m in d.usersInvolved)
-            if (d.usersInvolved[m].username.includes(CurrUser)) return d;
-        })
-      );
+    socket.once(`${CurrUser}-receive-groups`, (data) => {
+      setGroups(data);
     });
   });
 
-  const Gm = (e, users) => {
+  const Gm = (e, id, users) => {
     props.DisplayConvo[1]({
       type: "Group",
       username: e.currentTarget.innerText,
+      id: id,
       usersInvolved: users.map((u) => u.username),
     });
     props.convoName(e.currentTarget.innerText);
-    props.convo(null);
   };
 
   return (
     <div className="Group">
-      {Groups !== null ? (
-        Groups.map((g) => {
+      {Groups !== null && Groups !== undefined ? (
+        Groups.map((group) => {
           return (
             <div
               style={{
@@ -311,24 +287,24 @@ function Group(props) {
                 paddingBottom: "10px",
                 marginLeft: "10px",
                 marginRight: "10px",
-                borderBottom: "1px solid white",
+                borderBottom: ".5px solid grey",
               }}
               onClick={(e) => {
-                Gm(e, g.usersInvolved);
-                console.log(g.usersInvolved);
+                Gm(e, group.id, group.users);
               }}
             >
               <div
                 style={{
                   borderRadius: "10px",
-                  width: "50%",
+                  width: "fit-content",
                   height: "100%",
                   display: "flex",
                   overflowX: "scroll",
                   overflowY: "hidden",
                 }}
               >
-                {g.usersInvolved.map((u) => {
+                {}
+                {group.users.map((u) => {
                   return (
                     <>
                       <img src={u.avatar} width="30px"></img>
@@ -336,8 +312,16 @@ function Group(props) {
                   );
                 })}
               </div>
-              <p className="username" style={{ marginBottom: "0%", textOverflow: "ellipsis", width: "70%", overflow:"hidden"}}>
-                {g.name}
+              <p
+                className="username"
+                style={{
+                  marginBottom: "0%",
+                  textOverflow: "ellipsis",
+                  width: "70%",
+                  overflow: "hidden",
+                }}
+              >
+                {group.name}
               </p>
             </div>
           );
@@ -353,9 +337,18 @@ function Search(props) {
   const [Users, setUsers] = useState(null);
   const [displayOptions, setDisplayoptions] = useState(false);
   const [MessageTo, setMessageTo] = useState(null);
+  var timeid;
   const searchUname = (e) => {
     const { value } = e.target;
-    if (value.length > 0) socket.emit("search-users", value);
+    if (value.length > 0) {
+      if (timeid) {
+        clearTimeout(timeid);
+      }
+      setTimeout(() => { socket.emit("search-users", value) }, 1000)
+    }
+    else{
+      setUsers(null)
+    }
     socket.once("receive-users", (data) => {
       setUsers(data);
     });
@@ -469,42 +462,21 @@ function Conversations(props) {
   };
 
   React.useEffect(() => {
-    if (props.allDirectConversations === null) {
-      socket.emit(
-        `${props.DisplayConvo.type}Conversations`,
-        props.DisplayConvo
-      );
-      socket.once(`receive-conversations`, (convo) => {
-        setConvo(convo.reverse());
+    axios
+      .get(
+        url + `/get-convo/${props.DisplayConvo.type}/${props.DisplayConvo.id}`,
+        { headers: token }
+      )
+      .then((res) => {
+        setConvo(res.data);
       });
-    } else {
-      var data = [];
-      props.allDirectConversations.map((c) => {
-        if (props.DisplayConvo.type === "Direct")
-          for (const x in c) {
-            if (c.hasOwnProperty(x) && x === "usersInvolved")
-              if (
-                c[x]
-                  .map(
-                    (d) =>
-                      props.DisplayConvo.username.includes(d.username) &&
-                      props.DisplayConvo.length === d.length
-                  )
-                  .every((e) => e === true)
-              )
-                data.push(c.conversation.reverse());
-          }
-        else if (props.DisplayConvo.type === "Group")
-          for (const x in c) {
-            if (c.hasOwnProperty(x) && x === "name")
-              if (c[x] === props.DisplayConvo.username) {
-                data.push(c.conversation.reverse());
-              }
-          }
-      });
-      setConvo(data[0]);
-    }
-  }, [props.allDirectConversations, props.DisplayConvo]);
+  }, [props.DisplayConvo]);
+
+  React.useEffect(() => {
+    socket.once(`${props.DisplayConvo.id}-conversations`, (data) => {
+      setConvo(data);
+    });
+  });
 
   return (
     <>
@@ -574,12 +546,10 @@ function Conversations(props) {
 function Chats() {
   const [type, setType] = useState("Direct");
   const [Deets, setDeets] = useState(false);
-  const [groups, setGroups] = useState(null);
   const [DisplayConvo, setDisplayConvo] = useState(null);
   const [Message, setMessage] = useState();
-  const [convoName, setConvoName] = useState("");
-  const [DirectConvo, setDirectConvo] = useState(null);
-
+  const [convoName, setConvoName] = useState(null);
+  const screen = useContext(Screen);
   token = {
     authorization: localStorage.getItem("token"),
   };
@@ -589,24 +559,33 @@ function Chats() {
   const sendMessage = async (e) => {
     const image = document.getElementById("uploadFile").files[0];
     const imgurl = await UploadImg(image);
-    const data = {
-      content: Message,
-      image: imgurl,
-      currUser: CurrUser,
-      DisplayConvo,
-    };
+    if (image !== undefined || Message.length > 0) {
+      const data = {
+        content: Message,
+        image: imgurl,
+        currUser: CurrUser,
+        DisplayConvo,
+      };
 
-    await axios
-      .post(url + `/send-${DisplayConvo.type}-text`, data, { headers: token })
-      .then((res) => {
-        socket.emit(`${DisplayConvo.type}Conversations`, DisplayConvo);
-        setMessage("");
-        document.getElementById("uploadFile").value = "";
-        document.getElementById("fileSelected").value = "No file selected";
-      })
-      .catch((err) => {
-        NotificationManager.error("Please resend Message");
-      });
+      await axios
+        .post(
+          url + `/send-${DisplayConvo.type}-text/${DisplayConvo.id}`,
+          data,
+          { headers: token }
+        )
+        .then((res) => {
+          setMessage("");
+          document.getElementById("uploadFile").value = "";
+          document.getElementById("fileSelected").value = "No file selected";
+        })
+        .catch((err) => {
+          NotificationManager.error("Please resend Message");
+        });
+    }
+  };
+
+  const goBack = () => {
+    setConvoName(null);
   };
 
   const deleteChat = () => {
@@ -618,196 +597,182 @@ function Chats() {
       .post(url + `/delete/${DisplayConvo.type}`, data, { headers: token })
       .then((res) => {
         NotificationManager.success("Deleted Successfully!");
+        setConvoName(null);
+        setType(DisplayConvo.type);
         setDisplayConvo(null);
-        setConvoName("");
         setDeets(false);
-
       })
       .catch((err) => {
         NotificationManager.error("Delete Unsuccessful");
       });
     setDeets(false);
   };
-  React.useEffect(() => {
-    socket.once(`${CurrUser}-conversations`, (data) => {
-      setDirectConvo(data);
-    });
-  });
 
   return (
     <div className="App">
       <NavBar></NavBar>
       <div className="chat-container">
-        <div className="contacts">
-          <header>
-            <div
-              onClick={() => {
-                setType("Direct");
-                setDisplayConvo(null);
-                setConvoName("");
-                setDirectConvo(null);
-                setDeets(false);
-              }}
-            >
-              Direct
-            </div>
-            <div
-              onClick={() => {
-                setType("Group");
-                setConvoName("");
-                setDisplayConvo(null);
-                setDirectConvo(null);
-                setDeets(false);
-              }}
-            >
-              Groups
-            </div>
-            <div
-              onClick={() => {
-                setType("Search");
-                setDisplayConvo(null);
-                setConvoName("");
-                setDirectConvo(null);
-              }}
-            >
-              Search
-            </div>
-          </header>
-          <div className="GoDoS">
-            {type === "Direct" ? (
-              <Direct
-                convoName={setConvoName}
-                DisplayConvo={[DisplayConvo, setDisplayConvo]}
-                convo={setDirectConvo}
-              ></Direct>
-            ) : type === "Group" ? (
-              <Group
-                convoName={setConvoName}
-                RecievedGroups={DirectConvo}
-                chats={groups}
-                DisplayConvo={[DisplayConvo, setDisplayConvo]}
-                convo={setDirectConvo}
-              ></Group>
-            ) : (
-              <Search
-                Type={setType}
-              ></Search>
+        {convoName ? (
+          <div className="conversationsContainer">
+            <header className="convoName">
+              <div>
+                <FontAwesomeIcon
+                  icon={faArrowLeft}
+                  onClick={goBack}
+                  className="back-arrow"
+                ></FontAwesomeIcon>
+              </div>
+              <div>
+                <ConversationName
+                  convoName={convoName}
+                  DisplayConvo={DisplayConvo}
+                ></ConversationName>
+              </div>
+              <div className="deets">
+                {DisplayConvo !== null && (
+                  <>
+                    <svg
+                      className="deets-logo"
+                      onClick={(e) => {
+                        setDeets(!Deets);
+                      }}
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
+                    </svg>
+                    <div className={Deets ? "options active" : "options"}>
+                      {type === "Group" ? (
+                        <>
+                          <p
+                            className={
+                              Deets ? "add-members active" : "add-members"
+                            }
+                            onClick={() => {
+                              setConvoName(null);
+                              setType("Search");
+                              setDeets(false);
+                            }}
+                          >
+                            Add Members
+                          </p>
+                          <p
+                            className={Deets ? "edit-name active" : "edit-name"}
+                            onClick={(e) => {
+                              document
+                                .getElementById("change-name")
+                                .classList.add("active");
+                              setDeets(false);
+                            }}
+                          >
+                            Edit group name
+                          </p>
+
+                          <p
+                            className={Deets ? "exit active" : "exit"}
+                            onClick={deleteChat}
+                          >
+                            Exit Group
+                          </p>
+                        </>
+                      ) : (
+                        <p onClick={deleteChat}>Delete</p>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+            </header>
+            {DisplayConvo !== null && (
+              <>
+                <div className="conversations">
+                  <Conversations DisplayConvo={DisplayConvo}></Conversations>
+                </div>
+                <div style={{ position: "relative", height: "15%" }}>
+                  <label
+                    className="text-send-container"
+                    style={{ width: "100%", display: "flex" }}
+                  >
+                    <textarea
+                      type="text"
+                      className="text-bar"
+                      placeholder="Enter Message..."
+                      value={Message}
+                      onChange={(e) => {
+                        setMessage(e.target.value);
+                      }}
+                    />
+                    <button className="send-btn" onClick={sendMessage}>
+                      Send
+                    </button>
+                  </label>
+                  <div className="upload-container">
+                    <input
+                      type="file"
+                      id="uploadFile"
+                      onChange={(e) => {
+                        document.getElementById("fileSelected").textContent =
+                          e.target.files[0].name;
+                      }}
+                      hidden
+                    />
+                    <span id="fileSelected">No file selected</span>
+                    <label for="uploadFile">Upload</label>
+                  </div>
+                </div>
+              </>
             )}
           </div>
-        </div>
-        <div className="conversationsContainer">
-          <header className="convoName">
-            <div>
-              <ConversationName
-                convoName={convoName}
-                DisplayConvo={DisplayConvo}
-              ></ConversationName>
-            </div>
-            <div className="deets">
-              {DisplayConvo !== null ? (
-                <>
-                  <svg
-                    className="deets-logo"
-                    onClick={(e) => {
-                      setDeets(!Deets);
-                    }}
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
-                  </svg>
-                  <div className={Deets ? "options active" : "options"}>
-                    {type === "Group" ? (
-                      <>
-                        <p
-                          className={
-                            Deets ? "add-members active" : "add-members"
-                          }
-                          onClick={() => {
-                            setType("Search");
-                            setDeets(false);
-                          }}
-                        >
-                          Add Members
-                        </p>
-                        <p
-                          className={Deets ? "edit-name active" : "edit-name"}
-                          onClick={(e) => {
-                            document
-                              .getElementById("change-name")
-                              .classList.add("active");
-                            setDeets(false);
-                          }}
-                        >
-                          Edit group name
-                        </p>
-
-                        <p
-                          className={Deets ? "exit active" : "exit"}
-                          onClick={deleteChat}
-                        >
-                          Exit Group
-                        </p>
-                      </>
-                    ) : (
-                      <p onClick={deleteChat}>Delete</p>
-                    )}
-                  </div>
-                </>
+        ) : (
+          <div className="contacts">
+            <header>
+              <div
+                onClick={() => {
+                  setType("Direct");
+                  setDisplayConvo(null);
+                  setConvoName("");
+                  setDeets(false);
+                }}
+              >
+                Direct
+              </div>
+              <div
+                onClick={() => {
+                  setType("Group");
+                  setConvoName("");
+                  setDisplayConvo(null);
+                  setDeets(false);
+                }}
+              >
+                Groups
+              </div>
+              <div
+                onClick={() => {
+                  setType("Search");
+                  setDisplayConvo(null);
+                  setConvoName("");
+                }}
+              >
+                Search
+              </div>
+            </header>
+            <div className="GoDoS">
+              {type === "Direct" ? (
+                <Direct
+                  convoName={setConvoName}
+                  DisplayConvo={[DisplayConvo, setDisplayConvo]}
+                ></Direct>
+              ) : type === "Group" ? (
+                <Group
+                  convoName={setConvoName}
+                  DisplayConvo={[DisplayConvo, setDisplayConvo]}
+                ></Group>
               ) : (
-                <></>
+                <Search Type={setType}></Search>
               )}
             </div>
-          </header>
-          <div className="conversations">
-            {DisplayConvo !== null ? (
-              <>
-                <Conversations
-                  allDirectConversations={DirectConvo}
-                  DisplayConvo={DisplayConvo}
-                ></Conversations>
-              </>
-            ) : (
-              <></>
-            )}
           </div>
-          {DisplayConvo !== null ? (
-            <div style={{ position: "relative", height: "15%" }}>
-              <label
-                className="text-send-container"
-                style={{ width: "100%", display: "flex" }}
-              >
-                <textarea
-                  type="text"
-                  className="text-bar"
-                  placeholder="Enter Message..."
-                  value={Message}
-                  onChange={(e) => {
-                    setMessage(e.target.value);
-                  }}
-                />
-                <button className="send-btn" onClick={sendMessage}>
-                  Send
-                </button>
-              </label>
-              <div className="upload-container">
-                <input
-                  type="file"
-                  id="uploadFile"
-                  onChange={(e) => {
-                    document.getElementById("fileSelected").textContent =
-                      e.target.files[0].name;
-                  }}
-                  hidden
-                />
-                <span id="fileSelected">No file selected</span>
-                <label for="uploadFile">Upload</label>
-              </div>
-            </div>
-          ) : (
-            <></>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );

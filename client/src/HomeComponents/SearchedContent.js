@@ -1,13 +1,11 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import React, { useContext, useState } from "react";
-import axios from "axios";
 import { validate } from "../token";
-import Nothing, { onDislike, onLike, userName, check_content } from "../Functions";
-import "../styles/HomePage1.css";
-import Loading from "../Loading/Load";
+import { onDislike, onLike, userName, check_content } from "../Functions";
+import "./styles/Search.css";
+import { Loading, Nothing } from "../Loading/Load";
 import EditContent from "../EditDeleteModals/Edit";
 import Delete from "../EditDeleteModals/Delete";
-// import Nothing from "../Functions";
 import NavBar from "./Navbar";
 import socket from "../Socket";
 

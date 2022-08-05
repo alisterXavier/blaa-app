@@ -1,0 +1,33 @@
+/* Recommended Users */
+.PostReply-container .All-users {
+    width: 60%;
+    padding: 30px;
+  }
+  .PostReply-container .recUsers {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .PostReply-container .recUsers .user {
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    border: 0.1rem solid white;
+    padding: 10px;
+    margin: 5px 5px;
+    cursor: pointer;
+  }
+  .PostReply-container .recUsers p {
+    padding: 0px 5px;
+  }
+  .PostReply-container .recUsers .user:hover {
+    box-shadow: inset 0px 0px 0.6rem white, 0px 0px 0.6rem black,
+      0px 0px 0.6rem white;
+  }
+  .PostReply-container .recUsers .user img {
+    width: 20%;
+  }
+  .PostReply-container .All-Posts {
+    width: 60%;
+    text-align: start;
+  }

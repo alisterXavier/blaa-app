@@ -263,6 +263,7 @@
 }
 #new-post.active .upload-container {
   color: white;
+  max-width: 100%;
   padding: 10px;
   display: flex;
   justify-content: center;
@@ -279,8 +280,9 @@
 }
 #new-post.active .upload-container #fileSelected {
   margin-top: 10%;
-  width: 90%;
+  max-width: 100%;
   text-align: center;
+  overflow-x: hidden;
 }
 .navbar-container.active .navbar .tag {
   opacity: 0;
@@ -299,7 +301,7 @@
 }
 
 @media only screen and (max-width: 800px){
-  #new-post.active{
+#new-post.active{
     height: 100%;
   }
   #new-post.active #textarea-container .post-container{
@@ -308,6 +310,10 @@
   }
   #new-post.active #textarea-container .post-container textarea{
     font-size: 15px;
+  
+  }
+  #new-post.active #textarea-container .post-container .button-container{
+    width: 30%;
   }
   #new-post.active #textarea-container .post-container .button-container .Post-btn-container #Post-btn{
     padding: 10px 15px;
@@ -318,5 +324,11 @@
   }
   #new-post.active #textarea-container .post-container .button-container .Post-btn-container .upload-container #fileSelected{
     font-size: 10px;
+    text-overflow: ellipsis;
+  }
+  .searchbar-container.active input[type="search"]{
+    width: 90%;
+    height: 1%;
+    font-size: 15px;
   }
 }

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
-import "../styles/CreatePage.css";
+import "./styles/CreatePage.css";
 import { useNavigate } from "react-router-dom";
 import socket from "../Socket";
 import { debounce } from "../Functions";
+import { Validation } from '../Routes'
 
 let c = 0;
 let Dark = false;
@@ -17,6 +18,7 @@ function CreatAccForm(props) {
   const [AccountCreation, setAccountCreation] = useState(false);
   const [UsernameReq, setUsernameReq] = useState(false);
   const [PassReq, setPassReq] = useState(false);
+  const validation = useContext(Validation)
   let print;
 
   const Warnings = () => {
@@ -109,6 +111,7 @@ function CreatAccForm(props) {
           .then((res) => {
             if (res.status === 200) {
               localStorage.setItem("token", res.data.token);
+              validation[1](true)
               setAccountCreation(true);
               setTimeout(() => {
                 localStorage.setItem("token", res.data.token);

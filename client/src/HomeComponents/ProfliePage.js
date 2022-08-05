@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Delete from "../EditDeleteModals/Delete";
 import EditContent from "../EditDeleteModals/Edit";
-import "../styles/HomePage1.css";
-import axios from "axios";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import ReplyContainer from "../EditDeleteModals/Reply";
+import "./styles/Profile.css";
+import { useNavigate, useLocation } from "react-router-dom";
 import socket from "../Socket";
 import NavBar from "./Navbar";
-import Loading from "../Loading/Load";
+import { Loading } from "../Loading/Load";
 import { check_content, userName, onDislike, onLike } from "../Functions";
 import { validate } from "../token";
+import { Screen } from "../Routes";
 
 function BG(props) {
   const divs = (oarr, int) => {
@@ -39,14 +40,16 @@ function Profile() {
   const CurrUser = validate(token.authorization).username;
   const [ActiveContent, setActiveContent] = useState("posts");
   const [validation, setValidation] = useState(
-    sessionStorage.getItem("SignedIn")
+    validate(localStorage.getItem("token")).login
   );
+  const [Deets, setDeets] = useState({ index: -1, id: "" });
+  const [MobileDeets, setMobileDeets] = useState({ deetsId: -1, deets: false });
   const [UserContent, setUserContent] = useState();
   const [UserData, setUserData] = useState();
   const [DeleteModal, setDeleteModal] = useState({ delete: false, id: "" });
-  const [Deets, setDeets] = useState({ index: -1, id: "" });
   const [EditModal, setEditModal] = useState({ edit: false, id: "" });
-  const [Reply, setReply] = useState({ index: -1, reply: false });
+  const [Reply, setReply] = useState({ id: 0, reply: false });
+  const screen = useContext(Screen);
 
   const DeleteConfirmation = (id, type, cId) => {
     setDeleteModal((DeleteModal) => ({
@@ -97,8 +100,8 @@ function Profile() {
   };
 
   const reply = (e) => {
-    if (e === Reply.index) setReply({ index: -1, reply: false });
-    else setReply({ index: e, reply: true });
+    if (e === Reply.index) setReply({ id: -1, reply: false });
+    else setReply({ id: e, reply: true });
   };
 
   React.useEffect(() => {
@@ -133,26 +136,23 @@ function Profile() {
         <>
           <BG CurrUser={CurrUser} avatar={UserData.avatar}></BG>
           <div className="Profile-page">
-            {DeleteModal.delete ? (
+            {DeleteModal.delete && (
               <Delete
                 DeleteModal={[DeleteModal, setDeleteModal, CurrUser]}
               ></Delete>
-            ) : (
-              <></>
             )}
-            {EditModal.edit ? (
-              <EditContent EditModal={[EditModal, setEditModal]}></EditContent>
-            ) : (
-              <></>
+            {EditModal.edit && (
+              <EditContent Edit={[EditModal, setEditModal]}></EditContent>
+            )}
+            {Reply.reply && (
+              <ReplyContainer reply={[Reply, setReply]}></ReplyContainer>
             )}
             <header className="header-content">
               <div className="header-img">
                 <img src={UserData.avatar} width="200px"></img>
               </div>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <h1 className="username" style={{ fontSize: "40px" }}>
-                  {UserData.username}
-                </h1>
+                <h1 className="username">{UserData.username}</h1>
               </div>
             </header>
             <main className="main-content">
@@ -189,144 +189,179 @@ function Profile() {
                   </li>
                 </ul>
               </header>
-              <div className="content">
-                <div className="PostReply-container">
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      flexDirection: "column",
-                    }}
-                  >
-                    {UserContent.map((data, index) => {
-                      if (ActiveContent === "posts")
-                        if (data.type === "post")
-                          return (
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                width: "90%",
-                                position: "relative",
-                              }}
-                            >
-                              <div
-                                className="Replies Comments"
-                                id={data["_id"]}
-                                style={{
-                                  width: "100%",
-                                }}
-                              >
-                                <div className="Likes">
-                                  <div className="like">
-                                    <svg
-                                      viewBox="0 0 32 32"
-                                      data-id={data["_id"]}
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      onClick={() => {
-                                        onLike(
-                                          data["_id"],
-                                          data["score"],
-                                          { headers: token },
-                                          CurrUser
-                                        );
-                                      }}
-                                    >
-                                      <path
-                                        data-id={data["_id"]}
-                                        d="M28,14H18V4c0-1.104-0.896-2-2-2s-2,0.896-2,2v10H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h10v10c0,1.104,0.896,2,2,2  s2-0.896,2-2V18h10c1.104,0,2-0.896,2-2S29.104,14,28,14z"
-                                      />
-                                    </svg>
-                                  </div>
-                                  <p id="score">{data["score"].length}</p>
-                                  <div className="dislike">
-                                    <svg
-                                      onClick={() => {
-                                        onDislike(
-                                          data["_id"],
-                                          data["score"],
-                                          { headers: token },
-                                          CurrUser
-                                        );
-                                      }}
-                                      viewBox="0 0 24 24"
-                                      data-id={data["_id"]}
-                                      className="dislike"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        data-id={data["_id"]}
-                                        d="M18,11H6c-1.104,0-2,0.896-2,2s0.896,2,2,2h12c1.104,0,2-0.896,2-2S19.104,11,18,11z"
-                                      />
-                                    </svg>
-                                  </div>
-                                </div>
-                                <div className="Comment-Header">
-                                  <div className="Comment-info">
-                                    <div className="inner-header">
-                                      <div>
-                                        <img
-                                          alt="profile-pic"
-                                          src={data["avatar"]}
-                                        ></img>
-                                      </div>
-                                      {userName(data["username"], navigate)}
-                                    </div>
-                                    <p className="date">{data["createdAt"]}</p>
-                                  </div>
-                                  <div
-                                    className="content-container"
-                                    onClick={clickHandler}
+              <div className="PostReply-container">
+                <div className="Post-Reply-wrapper">
+                  {UserContent.map((data, index) => {
+                    if (ActiveContent === "posts")
+                      if (data.type === "post")
+                        return (
+                          <div className="PostReply-main">
+                            <div className="Replies Comments" id={data["_id"]}>
+                              <div className="Likes">
+                                <div className="like">
+                                  <svg
+                                    viewBox="0 0 32 32"
+                                    data-id={data["_id"]}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    onClick={() => {
+                                      onLike(
+                                        data["_id"],
+                                        data["score"],
+                                        { headers: token },
+                                        CurrUser
+                                      );
+                                    }}
                                   >
-                                    {
-                                      check_content(data["content"]).props
-                                        .children
-                                    }
+                                    <path
+                                      data-id={data["_id"]}
+                                      d="M28,14H18V4c0-1.104-0.896-2-2-2s-2,0.896-2,2v10H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h10v10c0,1.104,0.896,2,2,2  s2-0.896,2-2V18h10c1.104,0,2-0.896,2-2S29.104,14,28,14z"
+                                    />
+                                  </svg>
+                                </div>
+                                <p id="score">{data["score"].length}</p>
+                                <div className="dislike">
+                                  <svg
+                                    viewBox="0 0 24 24"
+                                    data-id={data["_id"]}
+                                    className="dislike"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    onClick={() => {
+                                      onDislike(
+                                        data["_id"],
+                                        data["score"],
+                                        {
+                                          headers: token,
+                                        },
+                                        CurrUser
+                                      );
+                                    }}
+                                  >
+                                    <path
+                                      data-id={data["_id"]}
+                                      d="M18,11H6c-1.104,0-2,0.896-2,2s0.896,2,2,2h12c1.104,0,2-0.896,2-2S19.104,11,18,11z"
+                                    />
+                                  </svg>
+                                </div>
+                              </div>
+                              <div className="Comment-Header">
+                                <div className="Comment-info">
+                                  <div className="inner-header">
+                                    <div>
+                                      <img
+                                        alt="profile-pic"
+                                        src={data["avatar"]}
+                                      ></img>
+                                    </div>
+                                    {userName(data["username"], navigate)}
+                                  </div>
+                                  <p className="date">{data["createdAt"]}</p>
+                                  {screen < 500 && (
+                                    <div className="deets-m">
+                                      <span>
+                                        <svg
+                                          onClick={() => {
+                                            setMobileDeets({
+                                              deetsId: index,
+                                              deets: !MobileDeets.deets,
+                                            });
+                                          }}
+                                          className="deets-img"
+                                          data-name="Layer 1"
+                                          id="Layer_1"
+                                          viewBox="0 0 200 200"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path d="M114.17,56.87A14.17,14.17,0,1,1,100,42.7,14.18,14.18,0,0,1,114.17,56.87Zm-24.74,0A10.57,10.57,0,1,0,100,46.3,10.58,10.58,0,0,0,89.43,56.87Z" />
+                                          <path d="M114.17,100A14.17,14.17,0,1,1,100,85.83,14.19,14.19,0,0,1,114.17,100Zm-24.74,0A10.57,10.57,0,1,0,100,89.43,10.58,10.58,0,0,0,89.43,100Z" />
+                                          <path d="M114.17,143.13A14.17,14.17,0,1,1,100,129,14.19,14.19,0,0,1,114.17,143.13Zm-24.74,0A10.57,10.57,0,1,0,100,132.57,10.58,10.58,0,0,0,89.43,143.13Z" />
+                                        </svg>
+                                      </span>
+                                      <ul
+                                        className={
+                                          MobileDeets.deetsId === index &&
+                                          MobileDeets.deets
+                                            ? "deets-opt active"
+                                            : "deets-opt"
+                                        }
+                                      >
+                                        {validation && (
+                                          <>
+                                            <li
+                                              onClick={() => {
+                                                setMobileDeets({});
+                                                reply(data["_id"]);
+                                              }}
+                                            >
+                                              Reply
+                                            </li>
+                                            {CurrUser === data["username"] && (
+                                              <>
+                                                <li
+                                                  onClick={() => {
+                                                    setMobileDeets({});
+                                                    setEditModal({
+                                                      edit: true,
+                                                      id: index,
+                                                    });
+                                                  }}
+                                                >
+                                                  Edit
+                                                </li>
+                                                <li
+                                                  style={{}}
+                                                  onClick={() => {
+                                                    setMobileDeets({});
+                                                    DeleteConfirmation(
+                                                      data["_id"],
+                                                      "post"
+                                                    );
+                                                  }}
+                                                >
+                                                  Delete
+                                                </li>
+                                              </>
+                                            )}
+                                          </>
+                                        )}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                                <div
+                                  className="content-container"
+                                  onClick={clickHandler}
+                                >
+                                  {
+                                    check_content(data["content"]).props
+                                      .children
+                                  }
+                                  {data["image"] && (
                                     <img
                                       src={data["image"]}
                                       className="image-content"
                                     ></img>
-                                  </div>
+                                  )}
                                 </div>
                               </div>
-                              <ul className="deets">
-                                <li
-                                  className={
-                                    Deets.index === index &&
-                                    Deets.id === data["_id"]
-                                      ? "active"
-                                      : ""
-                                  }
-                                  style={{ backgroundColor: "lightblue" }}
-                                  onClick={() => {
-                                    reply(index);
-                                  }}
-                                  onMouseOver={() => {
-                                    setDeets({ index: index, id: data["_id"] });
-                                  }}
-                                  onMouseOut={() => {
-                                    setDeets(-1);
-                                  }}
-                                >
-                                  Reply
-                                </li>
-                                {CurrUser === data["username"] ? (
+                            </div>
+                            {screen > 500 && (
+                              <ul className="deets-l">
+                                {validation && (
                                   <>
                                     <li
                                       className={
-                                        Deets.index === index + 1 &&
+                                        Deets.index === index &&
                                         Deets.id === data["_id"]
                                           ? "active"
                                           : ""
                                       }
-                                      style={{ backgroundColor: "limegreen" }}
+                                      style={{ backgroundColor: "lightblue" }}
                                       onClick={() => {
-                                        Edit(data["_id"]);
+                                        reply(data["_id"]);
                                       }}
                                       onMouseOver={() => {
                                         setDeets({
-                                          index: index + 1,
+                                          index: index,
                                           id: data["_id"],
                                         });
                                       }}
@@ -334,139 +369,214 @@ function Profile() {
                                         setDeets(-1);
                                       }}
                                     >
-                                      Edit
+                                      Reply
                                     </li>
-                                    <li
-                                      className={
-                                        Deets.index === index + 2 &&
-                                        Deets.id === data["_id"]
-                                          ? "active"
-                                          : ""
-                                      }
-                                      style={{ backgroundColor: "#FF928E" }}
-                                      onClick={() => {
-                                        DeleteConfirmation(data["_id"], "post");
-                                      }}
-                                      onMouseOver={() => {
-                                        setDeets({
-                                          index: index + 2,
-                                          id: data["_id"],
-                                        });
-                                      }}
-                                      onMouseOut={() => {
-                                        setDeets(-1);
-                                      }}
-                                    >
-                                      Delete
-                                    </li>
+
+                                    {CurrUser === data["username"] && (
+                                      <>
+                                        <li
+                                          className={
+                                            Deets.index === index + 1 &&
+                                            Deets.id === data["_id"]
+                                              ? "active"
+                                              : ""
+                                          }
+                                          style={{
+                                            backgroundColor: "limegreen",
+                                          }}
+                                          onClick={() => {
+                                            Edit(data["_id"]);
+                                          }}
+                                          onMouseOver={() => {
+                                            setDeets({
+                                              index: index + 1,
+                                              id: data["_id"],
+                                            });
+                                          }}
+                                          onMouseOut={() => {
+                                            setDeets(-1);
+                                          }}
+                                        >
+                                          Edit
+                                        </li>
+                                        <li
+                                          className={
+                                            Deets.index === index + 2 &&
+                                            Deets.id === data["_id"]
+                                              ? "active"
+                                              : ""
+                                          }
+                                          style={{ backgroundColor: "#FF928E" }}
+                                          onClick={() => {
+                                            DeleteConfirmation(
+                                              data["_id"],
+                                              "post"
+                                            );
+                                          }}
+                                          onMouseOver={() => {
+                                            setDeets({
+                                              index: index + 2,
+                                              id: data["_id"],
+                                            });
+                                          }}
+                                          onMouseOut={() => {
+                                            setDeets(-1);
+                                          }}
+                                        >
+                                          Delete
+                                        </li>
+                                      </>
+                                    )}
                                   </>
-                                ) : (
-                                  <></>
                                 )}
-                                <li
-                                  className={
-                                    Deets.index === index + 3 &&
-                                    Deets.id === data["_id"]
-                                      ? "active"
-                                      : ""
-                                  }
-                                  style={{ backgroundColor: "yellow" }}
-                                  onMouseOver={() => {
-                                    setDeets({
-                                      index: index + 3,
-                                      id: data["_id"],
-                                    });
-                                  }}
-                                  onMouseOut={() => {
-                                    setDeets(-1);
-                                  }}
-                                >
-                                  Share
-                                </li>
                               </ul>
-                            </div>
-                          );
-                      if (ActiveContent === "replies")
-                        if (data.type === "reply")
-                          return (
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                width: "90%",
-                                position: "relative",
-                              }}
-                            >
-                              <div
-                                className="Replies Comments"
-                                id={data["_id"]}
-                                style={{ width: "100%" }}
-                              >
-                                <div className="Likes">
-                                  <div className="like">
-                                    <svg
-                                      viewBox="0 0 32 32"
+                            )}
+                          </div>
+                        );
+                    if (ActiveContent === "replies")
+                      if (data.type === "reply")
+                        return (
+                          <div className="PostReply-main">
+                            <div className="Replies Comments" id={data["_id"]}>
+                              <div className="Likes">
+                                <div className="like">
+                                  <svg
+                                    viewBox="0 0 32 32"
+                                    data-id={data["_id"]}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    onClick={() => {
+                                      onLike(
+                                        data["_id"],
+                                        data["score"],
+                                        { headers: token },
+                                        CurrUser
+                                      );
+                                    }}
+                                  >
+                                    <path
                                       data-id={data["_id"]}
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      onClick={() => {
-                                        onLike(
-                                          data["_id"],
-                                          data["score"],
-                                          { headers: token },
-                                          CurrUser
-                                        );
-                                      }}
-                                    >
-                                      <path
-                                        data-id={data["_id"]}
-                                        d="M28,14H18V4c0-1.104-0.896-2-2-2s-2,0.896-2,2v10H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h10v10c0,1.104,0.896,2,2,2  s2-0.896,2-2V18h10c1.104,0,2-0.896,2-2S29.104,14,28,14z"
-                                      />
-                                    </svg>
-                                  </div>
-                                  <p id="score">{data["score"].length}</p>
-                                  <div className="dislike">
-                                    <svg
-                                      onClick={() => {
-                                        onDislike(
-                                          data["_id"],
-                                          data["score"],
-                                          { headers: token },
-                                          CurrUser
-                                        );
-                                      }}
-                                      viewBox="0 0 24 24"
-                                      data-id={data["_id"]}
-                                      className="dislike"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        data-id={data["_id"]}
-                                        d="M18,11H6c-1.104,0-2,0.896-2,2s0.896,2,2,2h12c1.104,0,2-0.896,2-2S19.104,11,18,11z"
-                                      />
-                                    </svg>
-                                  </div>
+                                      d="M28,14H18V4c0-1.104-0.896-2-2-2s-2,0.896-2,2v10H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h10v10c0,1.104,0.896,2,2,2  s2-0.896,2-2V18h10c1.104,0,2-0.896,2-2S29.104,14,28,14z"
+                                    />
+                                  </svg>
                                 </div>
-                                <div className="Comment-Header">
-                                  <div className="Comment-info">
-                                    <div className="inner-header">
-                                      <div>
-                                        <img
-                                          alt="profile-pic"
-                                          src={data["avatar"]}
-                                        ></img>
-                                      </div>
-                                      <p className="username">
-                                        {data["username"]}
-                                      </p>
+                                <p id="score">{data["score"].length}</p>
+                                <div className="dislike">
+                                  <svg
+                                    viewBox="0 0 24 24"
+                                    data-id={data["_id"]}
+                                    className="dislike"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    onClick={() => {
+                                      onDislike(
+                                        data["_id"],
+                                        data["score"],
+                                        {
+                                          headers: token,
+                                        },
+                                        CurrUser
+                                      );
+                                    }}
+                                  >
+                                    <path
+                                      data-id={data["_id"]}
+                                      d="M18,11H6c-1.104,0-2,0.896-2,2s0.896,2,2,2h12c1.104,0,2-0.896,2-2S19.104,11,18,11z"
+                                    />
+                                  </svg>
+                                </div>
+                              </div>
+                              <div className="Comment-Header">
+                                <div className="Comment-info">
+                                  <div className="inner-header">
+                                    <div>
+                                      <img
+                                        alt="profile-pic"
+                                        src={data["avatar"]}
+                                      ></img>
                                     </div>
-                                    <p>{data["createdAt"]}</p>
+                                    {userName(data["username"], navigate)}
                                   </div>
-                                  <div className="content-container">
-                                    {check_content(data["content"])}
-                                  </div>
+                                  <p className="date">{data["createdAt"]}</p>
+                                  {screen < 500 && (
+                                    <div className="deets-m">
+                                      <span>
+                                        <svg
+                                          onClick={() => {
+                                            setMobileDeets({
+                                              deetsId: index,
+                                              deets: !MobileDeets.deets,
+                                            });
+                                          }}
+                                          className="deets-img"
+                                          data-name="Layer 1"
+                                          id="Layer_1"
+                                          viewBox="0 0 200 200"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path d="M114.17,56.87A14.17,14.17,0,1,1,100,42.7,14.18,14.18,0,0,1,114.17,56.87Zm-24.74,0A10.57,10.57,0,1,0,100,46.3,10.58,10.58,0,0,0,89.43,56.87Z" />
+                                          <path d="M114.17,100A14.17,14.17,0,1,1,100,85.83,14.19,14.19,0,0,1,114.17,100Zm-24.74,0A10.57,10.57,0,1,0,100,89.43,10.58,10.58,0,0,0,89.43,100Z" />
+                                          <path d="M114.17,143.13A14.17,14.17,0,1,1,100,129,14.19,14.19,0,0,1,114.17,143.13Zm-24.74,0A10.57,10.57,0,1,0,100,132.57,10.58,10.58,0,0,0,89.43,143.13Z" />
+                                        </svg>
+                                      </span>
+                                      <ul
+                                        className={
+                                          MobileDeets.deetsId === index &&
+                                          MobileDeets.deets
+                                            ? "deets-opt active"
+                                            : "deets-opt"
+                                        }
+                                      >
+                                        {validation && (
+                                          <>
+                                            <li>Reply</li>
+                                            {CurrUser === data["username"] && (
+                                              <>
+                                                <li
+                                                  onClick={() => {
+                                                    setMobileDeets({});
+                                                    Edit(data["_id"]);
+                                                  }}
+                                                >
+                                                  Edit
+                                                </li>
+                                                <li
+                                                  style={{}}
+                                                  onClick={() => {
+                                                    setMobileDeets({});
+                                                    DeleteConfirmation(
+                                                      data["_id"],
+                                                      "post"
+                                                    );
+                                                  }}
+                                                >
+                                                  Delete
+                                                </li>
+                                              </>
+                                            )}
+                                          </>
+                                        )}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                                <div
+                                  className="content-container"
+                                  onClick={clickHandler}
+                                >
+                                  {
+                                    check_content(data["content"]).props
+                                      .children
+                                  }
+                                  {data["image"] && (
+                                    <img
+                                      src={data["image"]}
+                                      className="image-content"
+                                    ></img>
+                                  )}
                                 </div>
                               </div>
-                              <ul className="deets">
+                            </div>
+                            {screen > 500 && (
+                              <ul className="deets-l">
                                 <li
                                   className={
                                     Deets.index === index &&
@@ -479,77 +589,8 @@ function Profile() {
                                     reply(index);
                                   }}
                                   onMouseOver={() => {
-                                    setDeets({ index: index, id: data["_id"] });
-                                  }}
-                                  onMouseOut={() => {
-                                    setDeets(-1);
-                                  }}
-                                >
-                                  Reply
-                                </li>
-                                {CurrUser === data["username"] ? (
-                                  <>
-                                    <li
-                                      className={
-                                        Deets.index === index + 1 &&
-                                        Deets.id === data["_id"]
-                                          ? "active"
-                                          : ""
-                                      }
-                                      style={{ backgroundColor: "limegreen" }}
-                                      onClick={() => {
-                                        Edit(data["_id"]);
-                                      }}
-                                      onMouseOver={() => {
-                                        setDeets({
-                                          index: index + 1,
-                                          id: data["_id"],
-                                        });
-                                      }}
-                                      onMouseOut={() => {
-                                        setDeets(-1);
-                                      }}
-                                    >
-                                      Edit
-                                    </li>
-                                    <li
-                                      className={
-                                        Deets.index === index + 2 &&
-                                        Deets.id === data["_id"]
-                                          ? "active"
-                                          : ""
-                                      }
-                                      style={{ backgroundColor: "#FF928E" }}
-                                      onClick={() => {
-                                        DeleteConfirmation(data["_id"], "post");
-                                      }}
-                                      onMouseOver={() => {
-                                        setDeets({
-                                          index: index + 2,
-                                          id: data["_id"],
-                                        });
-                                      }}
-                                      onMouseOut={() => {
-                                        setDeets(-1);
-                                      }}
-                                    >
-                                      Delete
-                                    </li>
-                                  </>
-                                ) : (
-                                  <></>
-                                )}
-                                <li
-                                  className={
-                                    Deets.index === index + 3 &&
-                                    Deets.id === data["_id"]
-                                      ? "active"
-                                      : ""
-                                  }
-                                  style={{ backgroundColor: "yellow" }}
-                                  onMouseOver={() => {
                                     setDeets({
-                                      index: index + 3,
+                                      index: index,
                                       id: data["_id"],
                                     });
                                   }}
@@ -557,13 +598,76 @@ function Profile() {
                                     setDeets(-1);
                                   }}
                                 >
-                                  Share
+                                  Reply
                                 </li>
+                                <>
+                                  {validation &&
+                                  CurrUser === data["username"] ? (
+                                    <>
+                                      <li
+                                        className={
+                                          Deets.index === index + 1 &&
+                                          Deets.id === data["_id"]
+                                            ? "active"
+                                            : ""
+                                        }
+                                        style={{
+                                          backgroundColor: "limegreen",
+                                        }}
+                                        onClick={() => {
+                                          setEditModal({
+                                            id: index,
+                                            edit: true,
+                                          });
+                                        }}
+                                        onMouseOver={() => {
+                                          setDeets({
+                                            index: index + 1,
+                                            id: data["_id"],
+                                          });
+                                        }}
+                                        onMouseOut={() => {
+                                          Deets[1](-1);
+                                        }}
+                                      >
+                                        Edit
+                                      </li>
+                                      <li
+                                        className={
+                                          Deets.index === index + 2 &&
+                                          Deets.id === data["_id"]
+                                            ? "active"
+                                            : ""
+                                        }
+                                        style={{ backgroundColor: "#FF928E" }}
+                                        onClick={() => {
+                                          DeleteConfirmation(
+                                            data["_id"],
+                                            "post"
+                                          );
+                                        }}
+                                        onMouseOver={() => {
+                                          setDeets({
+                                            index: index + 2,
+                                            id: data["_id"],
+                                          });
+                                        }}
+                                        onMouseOut={() => {
+                                          setDeets(-1);
+                                        }}
+                                      >
+                                        Delete
+                                      </li>
+                                    </>
+                                  ) : (
+                                    <></>
+                                  )}
+                                </>
                               </ul>
-                            </div>
-                          );
-                    })}
-                  </div>
+                            )}
+                          </div>
+                        );
+                  })}
                 </div>
               </div>
             </main>

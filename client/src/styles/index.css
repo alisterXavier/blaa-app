@@ -12,3 +12,22 @@ html {
   background-color: var(--dark-background);
 
 }
+
+/* #0B1727 DarkMode */
+:root {
+  --tagcolor: black;
+  --dark-background: rgb(
+    0,
+    11,
+    22
+  ); /* Dark for bg and post/replies and background */
+  --dark-box-shadow: inset 0px 0px 100rem black, 0px 0px 0.6rem white; /* Hover on container */
+  --dark-border: 0.5px solid white;
+  --dark-uname: darkorange;
+  --dark-text: white;
+  --dark-underline: 3px solid white;
+  --dark-like-border: 3px solid white;
+  --dark-like: darkorange;
+  --dark-dislike: darkorange;
+  --font: Arial;
+}

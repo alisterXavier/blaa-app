@@ -28,16 +28,16 @@ app.use(
 
 app.use(express.json());
 
-if(process.env.NODE_ENV === 'production'){
-  app.use(express.static(path.join(__dirname1, '/client/build')))
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname1, 'client', 'build', 'index.html'))
-  })
-}else{
-  app.get('/', (req, res) => {
-    res.send("App is running")
-  })
-}
+// if(process.env.NODE_ENV === 'production'){
+//   app.use(express.static(path.join(__dirname1, '/client/build')))
+//   app.get('*', (req, res) => {
+//     res.sendFile(path.resolve(__dirname1, 'client', 'build', 'index.html'))
+//   })
+// }else{
+//   app.get('/', (req, res) => {
+//     res.send("App is running")
+//   })
+// }
 const {
   Users,
   Comments,
@@ -76,7 +76,7 @@ io.on("connection", (socket) => {
     Comments.find({}, (err, save) => {
       if (!err) {
         socket.emit("Updated", save.reverse());
-      }90
+      }
     });
   }).on("error", (err) => {
     console.log(err);
@@ -175,12 +175,13 @@ io.on("connection", (socket) => {
     );
   });
 
-  socket.on("chat-Direct", (user) => {
+  socket.on("chat-direct", (user) => {
     Direct.find(
       { usersInvolved: { $elemMatch: { username: user } } },
       (err, save) => {
         if (!err) {
-          socket.emit("receive-direct-chats", save);
+          var users = save.map(s => { return s._id, s.usersInvolved})
+          socket.emit("receive-direct-chats", users);
         }
       }
     );
@@ -190,7 +191,9 @@ io.on("connection", (socket) => {
     Group.find(
       { usersInvolved: { $elemMatch: { username: user } } },
       (err, data) => {
-        if (!err) socket.emit("receive-group-chats", data);
+        if (!err){ 
+          let groups = data.map(d => { return {id: d._id, users: d.usersInvolved, name: d.name}}) 
+          socket.emit("receive-group-chats", groups);}
       }
     );
   });

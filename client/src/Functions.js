@@ -62,26 +62,30 @@ export const userName = (user, navigate) => {
 };
 
 export const onLike = async (id, datas, headers, CurrUser) => {
-  if (datas.includes(CurrUser)) return;
+  debounce(async () => {
+    if (datas.includes(CurrUser)) return;
 
-  await axios.post(
-    process.env.REACT_APP_baseServerurl + `/user/${CurrUser}/like/${id}`,
-    {},
-    headers
-  );
+    await axios.post(
+      process.env.REACT_APP_baseServerurl + `/user/${CurrUser}/like/${id}`,
+      {},
+      headers
+    );
+  }, 1000);
 };
 
 export const onDislike = (id, datas, headers, CurrUser) => {
-  if (!datas.includes(CurrUser)) return;
+  debounce(async () => {
+    if (!datas.includes(CurrUser)) return;
 
-  axios.post(
-    process.env.REACT_APP_baseServerurl + `/user/${CurrUser}/dislike/${id}`,
-    {},
-    headers
-  );
+    axios.post(
+      process.env.REACT_APP_baseServerurl + `/user/${CurrUser}/dislike/${id}`,
+      {},
+      headers
+    );
+  }, 1000);
 };
 
-var timeoutId;
+var timeoutId = 0;
 export const debounce = (fn, delay) => {
   if (timeoutId) {
     clearTimeout(timeoutId);
@@ -90,14 +94,8 @@ export const debounce = (fn, delay) => {
   timeoutId = setTimeout(fn, delay);
 };
 
-export default function Nothing() {
-  return (
-    <div className="NothingContainer">
-      <p className="nothing">Nothing</p>
-      <p className="nothing">Nothing</p>
-      <p className="nothing">Nothing</p>
-      <p className="nothing">Nothing</p>
-      <p className="nothing">Nothing</p>
-    </div>
-  );
+export const screenSize = () => {
+  window.addEventListener("resize", (e) => {
+    
+  })
 }

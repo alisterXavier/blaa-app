@@ -1,0 +1,460 @@
+.App {
+  display: flex;
+  /* z-index: 0; */
+  min-height: 100%;
+  height: fit-content;
+}
+.new {
+  animation: Update 200ms ease;
+}
+
+@keyframes Update {
+  0% {
+    opacity: 0;
+    transform: translateX(300px);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Overlay */
+.overlay {
+  display: none;
+}
+.overlay.active {
+  display: block;
+  position: fixed;
+  /* z-index: 99; */
+  background-color: rgba(0, 0, 0, 0.855);
+  top: 0%;
+  bottom: 0%;
+  right: 0%;
+  left: 0%;
+}
+
+/* Content (Posts/Replies Layout) & Profile(Posts/Replies layout) */
+.PostReply-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 50px 0px;
+  align-items: center;
+  color: var(--dark-text);
+}
+.PostReply-container .Post-Reply-wrapper {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.PostReply-container .Post-Reply-wrapper .PostReply-main {
+  display: flex;
+  width: 70%;
+  position: relative;
+}
+.PostReply-container .Comments {
+  display: flex;
+  z-index: 1;
+  justify-content: space-evenly;
+  border-radius: 5px;
+  color: var(--dark-text);
+  background: var(--dark-background);
+  border: var(--dark-border);
+  padding: 30px;
+  margin: 20px 0px;
+  width: 100%;
+}
+.PostReply-container .Comments:hover {
+  box-shadow: var(--dark-box-shadow);
+}
+.PostReply-container .Comments .Likes {
+  padding: 10px;
+  width: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  border-right: var(--dark-like-border);
+  border-bottom: var(--dark-like-border);
+  border-radius: 0px 0px 5px 0px;
+  height: 100px;
+}
+.PostReply-container .Comments .Likes .like {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+}
+.PostReply-container .Comments .Likes .like svg {
+  cursor: pointer;
+  fill: var(--dark-like);
+  width: 20px;
+}
+.PostReply-container .Comments .Likes .like svg:active {
+  width: 15px;
+}
+.PostReply-container .Comments .Likes .like svg:hover {
+  fill: white;
+  filter: drop-shadow(0px 0px 2px blue) drop-shadow(2px 0px 2px blue);
+}
+.PostReply-container .Comments .Likes .dislike {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+}
+.PostReply-container .Comments .Likes .dislike svg {
+  cursor: pointer;
+  fill: var(--dark-dislike);
+}
+.PostReply-container .Comments .Likes .dislike svg:active {
+  width: 15px;
+}
+.PostReply-container .Comments .Likes .dislike svg:hover {
+  fill: white;
+  filter: drop-shadow(0px 0px 2px blue) drop-shadow(0px 0px 5px blue)
+    drop-shadow(0px 0px 7px blue);
+}
+.PostReply-container .Comments .Comment-Header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  padding: 10px;
+  margin: 0px 10px;
+}
+.PostReply-container .Comments .Comment-Header .Comment-info {
+  padding: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.PostReply-container .Comments .Comment-Header .Comment-info .inner-header {
+  width: 40%;
+  padding: 10px;
+  height: 80%;
+  display: flex;
+  align-items: center;
+}
+.PostReply-container .Comments .Comment-Header .Comment-info .inner-header div {
+  width: 30%;
+}
+.username {
+  color: var(--dark-uname);
+  margin-top: 17%;
+  cursor: pointer;
+  padding: 0px 10px;
+  font-size: 20px;
+  margin-bottom: 0%;
+}
+.username:hover {
+  color: yellow;
+}
+.PostReply-container .Comments .Comment-Header .Comment-info img {
+  width: 90%;
+  border-radius: 50px;
+}
+.PostReply-container .Comments .Comment-Header .content-container {
+  position: relative;
+  border-top: var(--dark-underline);
+  width: 100%;
+  padding: 20px;
+  color: var(--dark-text);
+}
+.PostReply-container .Comments .Comment-Header .content-container p {
+  width: 100%;
+  height: fit-content;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+.PostReply-container .Comments .Comment-Header .content-container p a {
+  text-decoration: none;
+  color: white;
+}
+.PostReply-container .Comments .Comment-Header .content-container p a:hover {
+  color: var(--dark-uname);
+}
+.PostReply-container
+  .Comments
+  .Comment-Header
+  .content-container
+  .edit-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: flex-end;
+  border: 1px solid white;
+  background-color: black;
+  width: 100%;
+}
+.PostReply-container
+  .Comments
+  .Comment-Header
+  .content-container
+  .edit-textarea {
+  background-color: black;
+  padding: 15px;
+  width: 100%;
+  font-size: 15px;
+  color: white;
+  border: none;
+  margin: 10px 0px;
+  height: 100%;
+  outline: none;
+  resize: none;
+}
+.PostReply-container .Comments .Comment-Header .content-container .edit-btn,
+.PostReply-container .Comments .Comment-Header .content-container .edit-cancel {
+  border: none;
+  padding: 10px;
+  margin: 10px 0px;
+  color: white;
+  background: none;
+}
+
+.PostReply-container
+  .Comments
+  .Comment-Header
+  .content-container
+  .image-content {
+  max-width: 200px;
+  max-height: 200px;
+}
+.PostReply-container .deets-l {
+  position: absolute;
+  display: flex;
+  text-align: center;
+  padding: 10px;
+  right: 0%;
+  height: fit-content;
+}
+.PostReply-container .deets-l li {
+  margin: 0px 1px;
+  width: 50px;
+  padding: 10px;
+  list-style: none;
+  height: fit-content;
+  transform: translateY(-15px);
+  transition: all 200ms ease;
+}
+.PostReply-container .deets-l li.active {
+  transition: all 200ms ease;
+  transform: translateY(-40px);
+  cursor: pointer;
+}
+.taggedUser {
+  color: darkorange;
+  cursor: pointer;
+}
+
+/* Replies */
+.PostReply-container .Replies {
+  width: 90%;
+  height: 200px;
+  padding: 20px 0px;
+  height: fit-content;
+}
+.PostReply-container .Post-Reply-wrapper .Replies-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  width: 70%;
+}
+.PostReply-container .Post-Reply-wrapper .Replies-wrapper .Replies-main {
+  display: flex;
+  position: relative;
+  justify-content: right;
+  width: 90%;
+  border-left: var(--dark-border);
+}
+.PostReply-container .Replies .Comment-header {
+  padding: 0px;
+  margin: 0px;
+}
+.PostReply-container .Replies .Comment-header .Comment-info {
+  padding: 5px;
+  margin-bottom: 5px;
+}
+.PostReply-container .Replies .Comment-header .Comment-info .inner-header {
+  padding: 0px;
+}
+.PostReply-container .Replies .Comment-header .Comment-info .inner-header p {
+  padding: 0px;
+  margin: 0px;
+}
+.PostReply-container .Replies .Comment-header .content {
+  padding: 0px;
+}
+.PostReply-container .Replies .Comment-header .content p {
+  padding: 0px 10px;
+}
+.PostReply-container .Replies .Likes {
+  padding: 5px;
+  height: fit-content;
+}
+.PostReply-container .Replies .Likes .like,
+.PostReply-container .Replies .Likes .dislike {
+  width: 15px;
+  height: 15px;
+}
+.PostReply-container .Replies .Likes #score {
+  margin: 10px 0px;
+}
+.PostReply-container div .more-replies,
+.PostReply-container div .less-replies {
+  color: var(--dark-text);
+  text-shadow: 0px 0px 5px black;
+}
+.PostReply-container div .more-replies p:hover,
+.PostReply-container div .less-replies p:hover {
+  color: lightblue;
+  cursor: pointer;
+}
+.PostReply-container .more-replies-container {
+  border-bottom: var(--dark-like-border);
+  border-right: var(--dark-like-border);
+  border-left: var(--dark-like-border);
+  text-align: center;
+  width: 100%;
+}
+
+@media only screen and (max-width: 700px) {
+  .PostReply-container .Post-Reply-wrapper {
+    width: 90%;
+  }
+  .PostReply-container .Post-Reply-wrapper .PostReply-main {
+    width: 100%;
+  }
+  .PostReply-container .Comments {
+    width: 100%;
+    position: relative;
+    padding: 10px;
+    flex-direction: column-reverse;
+    align-items: start;
+    border-radius: 0px;
+  }
+  .PostReply-container .Comments:hover {
+    box-shadow: none;
+  }
+  .PostReply-container .Comment-Header .Comment-info {
+    position: relative;
+    padding: 0%;
+    width: 100%;
+  }
+  .PostReply-container
+    .Post-Reply-wrapper
+    .PostReply-main
+    .Comment-Header
+    .Comment-info
+    .inner-header {
+    padding: 0%;
+  }
+  .PostReply-container
+    .Post-Reply-wrapper
+    .PostReply-main
+    .Comment-Header
+    .Comment-info
+    .inner-header
+    div {
+    width: 70%;
+  }
+  .PostReply-container .Comment-Header .Comment-info .inner-header div img {
+    width: 40px;
+  }
+  .PostReply-container .Comment-Header .Comment-info .date {
+    font-size: x-small;
+    height: fit-content;
+  }
+  .PostReply-container .Comment-Header .Comment-info .deets-m {
+    position: absolute;
+    z-index: 1;
+    top: 5%;
+    left: 100%;
+    padding: 0%;
+    margin: 0%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .PostReply-container .Comment-Header .Comment-info .deets-m .deets-img {
+    width: 30px;
+    fill: white;
+  }
+  .PostReply-container .Comment-Header .Comment-info .deets-m .deets-opt {
+    display: none;
+    position: absolute;
+    top: 0%;
+    right: 100%;
+    height: 0px;
+    padding: 10px;
+  }
+  .PostReply-container
+    .Comment-Header
+    .Comment-info
+    .deets-m
+    .deets-opt.active {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    align-items: center;
+    background-color: black;
+    border-radius: 5px;
+    width: fit-content;
+    height: fit-content;
+    border: 1px solid white;
+  }
+  .PostReply-container
+    .Comment-Header
+    .Comment-info
+    .deets-m
+    .deets-opt.active
+    li {
+    padding: 10px;
+    margin: 0px;
+  }
+  .PostReply-container .Comments .Comment-Header .content-container {
+    margin-left: 10px;
+  }
+  .PostReply-container .Comments .Likes {
+    display: flex;
+    width: 50%;
+    height: 10%;
+    flex-direction: row;
+    border: none;
+  }
+  .PostReply-container .Post-Reply-wrapper .Comments .like,
+  .PostReply-container .Comments .Likes .dislike {
+    width: 10px;
+  }
+  .username {
+    font-size: 12px;
+  }
+  .PostReply-container .Post-Reply-wrapper .Replies-wrapper {
+    width: 90%;
+  }
+  .PostReply-container .Post-Reply-wrapper .Replies-wrapper .Replies-main {
+    padding-left: 10px;
+  }
+  .PostReply-container
+    .Post-Reply-wrapper
+    .Replies-wrapper
+    .Replies-main
+    .Comment-Header
+    .Comment-info
+    .inner-header {
+    padding: 0px;
+  }
+  .PostReply-container
+    .Post-Reply-wrapper
+    .Replies-wrapper
+    .Replies-main
+    .Comment-Header
+    .Comment-info
+    .inner-header
+    img {
+    width: 30px;
+  }
+
+}

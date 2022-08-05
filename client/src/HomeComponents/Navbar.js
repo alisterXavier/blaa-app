@@ -1,13 +1,16 @@
-import React, { useContext, useReducer, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
-import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import socket from "../Socket";
 import { validate } from "../token";
-import { UploadImg } from "../Functions";
+import { debounce, UploadImg } from "../Functions";
+import './styles/navbar.css'
+import { Validation } from '../Routes'
 
 function NavBar() {
   const navigate = useNavigate();
-  const validation = sessionStorage.getItem("SignedIn");
+  // const validation = sessionStorage.getItem("SignedIn");
+  const validation = useContext(Validation)  
   let CurrUser = validate(localStorage.getItem("token")).username;
   const [searchbar, setSearchbar] = useState(false);
   const [NewPost, setNewPost] = useState(false);
@@ -59,6 +62,8 @@ function NavBar() {
           }
         }
       }
+      setContent("")
+      document.getElementById("fileSelected").textContent = "No file selected"
       setNewPost(!NewPost);
     } else if (id === "Post-btn") {
       if (Content.length > 0) {
@@ -69,16 +74,17 @@ function NavBar() {
           Image: url,
         };
 
-        axios.post(
-          process.env.REACT_APP_baseServerurl + "/user/:username/store/post",
-          data,
-          { headers: { authorization: token } }
-        );
+        debounce(() => {
+          axios.post(
+            process.env.REACT_APP_baseServerurl + "/user/:username/store/post",
+            data,
+            { headers: { authorization: token } }
+          ).then((res) => {
+            setNewPost(!NewPost);
+            setContent("");
+          });
+        }, 1000)
 
-        setTimeout(() => {
-          setNewPost(!NewPost);
-          setContent("");
-        }, 500);
       } else {
         document.getElementById("content").classList.add("warning");
         setTimeout(() => {
@@ -154,7 +160,7 @@ function NavBar() {
             </p>
           </div>
           <div className="user-profile navbar-content">
-            {validation || CurrUser !== undefined ? (
+            {validation[0] || CurrUser !== undefined ? (
               <>
                 <p
                   id="Profile"
@@ -181,14 +187,14 @@ function NavBar() {
             )}
             <div id="user-tag" className="tag">
               <p>
-                {validation || CurrUser !== undefined
+                {validation[0] || CurrUser !== undefined
                   ? "Profile"
                   : "Login/Signup"}
               </p>
             </div>
           </div>
 
-          {validation || CurrUser !== undefined ? (
+          {validation[0] || CurrUser !== undefined ? (
             <>
               <div className="new-comment navbar-content">
                 <p className="post" id="new-comment" onClick={handleClick}>
@@ -209,6 +215,7 @@ function NavBar() {
                 <Link
                   to="/user/home"
                   onClick={() => {
+                    validation[1](false)
                     localStorage.removeItem("token");
                     sessionStorage.removeItem("SignedIn");
                   }}
@@ -227,26 +234,30 @@ function NavBar() {
         className={
           searchbar ? "searchbar-container active" : "searchbar-container"
         }
+        onClick={(e) => {
+          setSearchbar(false)
+        }}
       >
-        <input
-          type="search"
-          onKeyDown={(e) => {
-            const { key } = e;
-            if (key === "Enter") {
-              navigate(`/user/${CurrUser}/search?content=${SearchedData}`);
-              setSearchbar(false);
-            }
-            if (key === "Escape") {
-              setSearchbar(false);
-              setSearchedData("");
-            }
-          }}
-          value={SearchedData}
-          placeholder="Search"
-          onChange={(e) => {
-            setSearchedData(e.target.value);
-          }}
-        ></input>
+          <input
+          onClick={(e) => { e.stopPropagation()}}
+            type="search"
+            onKeyDown={(e) => {
+              const { key } = e;
+              if (key === "Enter") {
+                navigate(`/user/${CurrUser}/search?content=${SearchedData}`);
+                setSearchbar(false);
+              }
+              if (key === "Escape") {
+                setSearchbar(false);
+                setSearchedData("");
+              }
+            }}
+            value={SearchedData}
+            placeholder="Search"
+            onChange={(e) => {
+              setSearchedData(e.target.value);
+            }}
+          ></input>
       </div>
       <div id="new-post" className={NewPost === true ? "active" : ""}>
         <div id="textarea-container">
@@ -277,7 +288,7 @@ function NavBar() {
                     hidden
                   />
                   <label for="upload-img">Upload</label>
-                  <span id="fileSelected">No file selected</span>
+                  <p id="fileSelected">No file selected</p>
                 </div>
               </div>
             </div>
