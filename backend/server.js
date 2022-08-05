@@ -180,7 +180,7 @@ io.on("connection", (socket) => {
       { usersInvolved: { $elemMatch: { username: user } } },
       (err, save) => {
         if (!err) {
-          var users = save.map(s => { return s._id, s.usersInvolved})
+          var users = save.map(s => { return {id: s._id, users: s.usersInvolved}})
           socket.emit("receive-direct-chats", users);
         }
       }

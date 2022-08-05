@@ -220,10 +220,10 @@ function Direct(props) {
                 borderBottom: ".5px solid grey",
               }}
               onClick={(e) => {
-                Dm(e, d["_id"]);
+                Dm(e, d.id);
               }}
             >
-              {d.map((u) => {
+              {d.users.map((u) => {
                 if (u.username !== CurrUser) {
                   return (
                     <>
@@ -464,7 +464,7 @@ function Conversations(props) {
   React.useEffect(() => {
     axios
       .post(
-        url + `/get-convo/${props.DisplayConvo.type}/${props.DisplayConvo.id}`,
+        url + `/get-convo/${props.DisplayConvo.type}/${props.DisplayConvo.id}`, {},
         { headers: token }
       )
       .then((res) => {

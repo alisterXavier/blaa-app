@@ -119,7 +119,6 @@ function LoginPage() {
     localStorage.setItem("Mode", Dark);
 
     if (Authentication === true) {
-      console.log("as");
       setTimeout(() => {
         sessionStorage.setItem("SignedIn", "true");
         navigate(`user/${Username}`, {
