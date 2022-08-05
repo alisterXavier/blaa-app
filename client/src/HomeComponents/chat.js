@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import axios from "axios";
 import socket from "../Socket";
 import { validate } from "../token";
-import { debounce, UploadImg } from "../Functions";
+import { UploadImg } from "../Functions";
 import NavBar from "./Navbar";
 import { Loading } from "../Loading/Load";
 import { NotificationManager } from "react-notifications";

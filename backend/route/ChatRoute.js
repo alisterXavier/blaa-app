@@ -163,7 +163,7 @@ router.post("/send-Group-text/:id", (req, res) => {
   var io = req.app.get("io");
   Group.findById(id, (err, save) => {
     if (!err) {
-      if (!save.usersInvolved.includes(currUser)) {
+      if (!save.usersInvolved.map(u => u.avatar === currUser)) {
         res.sendStatus(401);
       }
     }
