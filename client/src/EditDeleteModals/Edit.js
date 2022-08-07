@@ -24,7 +24,8 @@ function EditContent(props) {
   };
 
   const handleClick = () => {
-    if (Content.legth > 0) {
+    if (Content.length > 0) {
+      console.log("ssss")
       const data = {
         id: props.Edit[0].id,
         Content: Content,

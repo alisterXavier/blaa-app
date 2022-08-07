@@ -6,7 +6,7 @@
   z-index: 100;
   position: fixed;
 }
-.nav-lines-container .nav-lines{
+.nav-lines-container .nav-lines {
   display: block;
   border-radius: 5px;
   width: 30%;
@@ -14,42 +14,42 @@
   margin: 10%;
   padding: 2px;
   background-color: orange;
-  transition: 600ms all ease;
+  transition: 300ms all ease;
 }
-.nav-lines-container .nav-lines.active{
-    transition: 600ms all ease;
+.nav-lines-container .nav-lines.active {
+  transition: 300ms all ease;
 }
-/* .nav-lines-container:hover .nav-lines{
-    box-shadow: 1px 1px 5px red;
-} */
 
 .nav-lines-container .nav-lines.active:first-child {
-    transform: rotate(135deg) translate(20%, -100%);
+  transform: rotate(135deg) translate(20%, -100%);
 }
 .nav-lines-container .nav-lines.active:last-child {
-    transform: rotate(45deg) translate(-20%, -100%);
+  transform: rotate(45deg) translate(-20%, -100%);
 }
 .navbar-container {
-  display: none;
-}
-.navbar-container.active {
-  display: block;
   position: fixed;
   display: flex;
-  background-color: rgba(0, 0, 0, 0.73);
   justify-content: center;
   width: 100%;
   height: 100%;
+  opacity: 0;
+  transform: translateX(-100%) rotateY(-90deg);
+  transition: opacity 500ms ease, transform 500ms ease ;
   z-index: 99;
+  background-color: rgba(0, 0, 0, 0.893); 
 }
-.navbar-container.active .navbar {
+.navbar-container.active {
+  transform: translateX(-0%) rotateY(0deg);
+  opacity: 1;
+}
+.navbar-container .navbar {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   border-radius: 0px 0px 5px 0px;
   padding: 15px 10px;
 }
-.navbar-container.active .navbar .navbar-content{
+.navbar-container .navbar .navbar-content {
   position: relative;
   width: 100%;
   height: 10%;
@@ -63,16 +63,17 @@
   letter-spacing: 1px;
   transition: font-size 200ms ease;
 }
-.navbar-container.active .navbar .navbar-content:hover{
+.navbar-container .navbar .navbar-content:hover {
   transition: font-size 200ms ease;
   font-size: 25px;
 }
-.navbar-container.active .navbar .navbar-content p, .navbar-container.active .navbar .navbar-content a{
+.navbar-container .navbar .navbar-content p,
+.navbar-container .navbar .navbar-content a {
   display: flex;
   margin: 0px;
   align-items: center;
 }
-.navbar-container.active .navbar .navbar-content .icons{
+.navbar-container .navbar .navbar-content .icons {
   position: absolute;
   fill: url("#myGradient");
   right: 70%;
@@ -82,20 +83,20 @@
   opacity: 0;
   transition: all 200ms ease;
 }
-.navbar-container.active .navbar .navbar-content:hover .icons{
+.navbar-container .navbar .navbar-content:hover .icons {
   transition: all 300ms ease;
   opacity: 1;
-  transform: rotate(-.3turn);
-  transform: translateX(-15px); 
+  transform: rotate(-0.3turn);
+  transform: translateX(-15px);
 }
-.navbar-container.active .navbar .search #search-bar {
+.navbar-container .navbar .search #search-bar {
   opacity: 0;
   position: absolute;
   width: 0px;
   transform: translateX(40px);
   transition: all 200ms ease;
 }
-.navbar-container.active .navbar .search #search-bar.active {
+.navbar-container .navbar .search #search-bar.active {
   opacity: 1;
   position: absolute;
   width: 300px;
@@ -116,7 +117,7 @@
   left: 0%;
   right: 0%;
 }
-.searchbar-container.active::after{
+.searchbar-container.active::after {
   content: "";
   background-color: rgba(0, 0, 0, 0.679);
   z-index: -1;
@@ -125,7 +126,7 @@
   bottom: 0%;
   left: 0%;
   right: 0%;
-} 
+}
 .searchbar-container.active input[type="search"] {
   position: fixed;
   border: none;
@@ -135,7 +136,7 @@
   padding: 30px 10px;
   font-size: 30px;
 }
-.navbar-container.active .navbar .navbar-content #Profile-pic {
+.navbar-container .navbar .navbar-content #Profile-pic {
   position: absolute;
   border-radius: 50px;
   right: 70%;
@@ -145,30 +146,26 @@
   /* transform: translate(10px) rotate(0deg); */
   transition: all 500ms ease;
 }
-.navbar-container.active .navbar .navbar-content:hover #Profile-pic {
-  opacity: .9;
+.navbar-container .navbar .navbar-content:hover #Profile-pic {
+  opacity: 0.9;
   transform: translate(-20px);
   transition: all 500ms ease;
 }
-.navbar-container.active .navbar .user-profile .Please-Login .Login-Signup {
+.navbar-container .navbar .user-profile .Please-Login .Login-Signup {
   color: white;
   padding: 10px 0px;
   text-decoration: none;
   border: none;
   cursor: pointer;
 }
-.navbar-container.active
-  .navbar
-  .user-profile
-  .Please-Login
-  .Login-Signup:hover {
+.navbar-container .navbar .user-profile .Please-Login .Login-Signup:hover {
   text-shadow: 0px 0px 5px blue, 0px 0px 7px blue;
 }
-.navbar-container.active .navbar .logOut a {
+.navbar-container .navbar .logOut a {
   text-decoration: none;
   color: white;
 }
-.navbar-container.active .navbar .logOut a:hover {
+.navbar-container .navbar .logOut a:hover {
   color: lightblue;
 }
 #new-post {
@@ -222,16 +219,11 @@
 #new-post.active #content.warning::placeholder {
   color: red;
 }
-  #new-post.active
-  #textarea-container
-  .button-container {
+#new-post.active #textarea-container .button-container {
   height: 100%;
 }
 
-#new-post.active
-  #textarea-container
-  .button-container
-  #cancel {
+#new-post.active #textarea-container .button-container #cancel {
   text-align: end;
   cursor: pointer;
 }
@@ -284,7 +276,7 @@
   text-align: center;
   overflow-x: hidden;
 }
-.navbar-container.active .navbar .tag {
+.navbar-container .navbar .tag {
   opacity: 0;
   position: absolute;
   color: var(--dark-text);
@@ -293,40 +285,56 @@
   transform: translateX(45px);
   transition: all 200ms ease;
 }
-.navbar-container.active .navbar .tag.active {
+.navbar-container .navbar .tag.active {
   opacity: 1;
   width: 70px;
   transform: translateX(90px);
   transition: all 200ms ease;
 }
 
-@media only screen and (max-width: 800px){
-#new-post.active{
+@media only screen and (max-width: 900px) {
+  #new-post.active {
     height: 100%;
   }
-  #new-post.active #textarea-container .post-container{
+  #new-post.active #textarea-container .post-container {
     height: 300px;
     width: 85%;
   }
-  #new-post.active #textarea-container .post-container textarea{
+  #new-post.active #textarea-container .post-container textarea {
     font-size: 15px;
-  
   }
-  #new-post.active #textarea-container .post-container .button-container{
+  #new-post.active #textarea-container .post-container .button-container {
     width: 30%;
   }
-  #new-post.active #textarea-container .post-container .button-container .Post-btn-container #Post-btn{
+  #new-post.active
+    #textarea-container
+    .post-container
+    .button-container
+    .Post-btn-container
+    #Post-btn {
     padding: 10px 15px;
     font-size: 12px;
   }
-  #new-post.active #textarea-container .post-container .button-container .Post-btn-container .upload-container label{
+  #new-post.active
+    #textarea-container
+    .post-container
+    .button-container
+    .Post-btn-container
+    .upload-container
+    label {
     font-size: 10px;
   }
-  #new-post.active #textarea-container .post-container .button-container .Post-btn-container .upload-container #fileSelected{
+  #new-post.active
+    #textarea-container
+    .post-container
+    .button-container
+    .Post-btn-container
+    .upload-container
+    #fileSelected {
     font-size: 10px;
     text-overflow: ellipsis;
   }
-  .searchbar-container.active input[type="search"]{
+  .searchbar-container.active input[type="search"] {
     width: 90%;
     height: 1%;
     font-size: 15px;

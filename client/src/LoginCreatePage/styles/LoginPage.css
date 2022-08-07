@@ -179,33 +179,31 @@ input:focus{
     border-radius: 5px;
     top: 200px;
     padding: 20px;
-    width: 250px;
+    width: 200px;
     height: fit-content;
     background-color: rgba(255, 255, 255, 0.808);
-    animation: slidein 1s ease;
+    animation: slidein 600ms ease;
 }
 #Login-feedback p{
     font-size: 20px;
+    width: 100%;
     color: black;
 }
 @keyframes slidein {
     0%{
-        opacity: 0;
-        transform: translateY(-400px) rotate(-150deg);
+        opacity: 1;
+        transform: translateY(-90px) rotateX(90deg);
     }
     100%{
-        opacity: 1;
-        transform: translateY(0px) rotateY(0deg);
+        transform: translateY(0px) rotateX(0deg);
     }
 }
 @keyframes slideout {
     0%{
-        opacity: 1;
-        transform: translateY(0px) rotate(0deg);
+        transform: scale(1,1);
     }
     100%{
-        opacity: 0;
-        transform: translateY(-400px) rotate(-150deg);
+        transform: scale(0,0);
     }
 }
 .warningActive::placeholder{
@@ -218,32 +216,18 @@ input:focus{
         justify-content: end;
         align-items: center;
         height: 100vh;
-        padding: 15% 0%;
+        padding: 0%;
     }
     .Login{
         margin-top: 0%;
         border: none;
         box-shadow: none;
-        width: 35%;
-        height: fit-content;
-    }
-}   
-@media screen and (max-width: 500px){
-    .Credentials-container{
-        padding: 0%;
-    }
-    .Login{
-        margin-top: 0% ;
-        padding: 0%;
         width: 60%;
         height: fit-content;
-        border: none;
     }
-
     #Login-feedback{
-        width: 50%;
+        /* width: 50%; */
         display: flex;
         align-items: center;
-        /* background-color:; */
     }
-}
+}   

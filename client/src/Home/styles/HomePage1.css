@@ -65,6 +65,7 @@
   padding: 30px;
   margin: 20px 0px;
   width: 100%;
+  transition: box-shadow 200ms ease;
 }
 .PostReply-container .Comments:hover {
   box-shadow: var(--dark-box-shadow);
@@ -320,7 +321,17 @@
   width: 100%;
 }
 
-@media only screen and (max-width: 700px) {
+.Loading-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  font-size: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media only screen and (max-width: 900px) {
   .PostReply-container .Post-Reply-wrapper {
     width: 90%;
   }
@@ -338,6 +349,9 @@
   .PostReply-container .Comments:hover {
     box-shadow: none;
   }
+  .PostReply-container .Comments .Comment-Header {
+    width: 90%;
+  }
   .PostReply-container .Comment-Header .Comment-info {
     position: relative;
     padding: 0%;
@@ -349,6 +363,7 @@
     .Comment-Header
     .Comment-info
     .inner-header {
+    width: 20%;
     padding: 0%;
   }
   .PostReply-container
@@ -364,7 +379,7 @@
     width: 40px;
   }
   .PostReply-container .Comment-Header .Comment-info .date {
-    font-size: x-small;
+    font-size: 15px;
     height: fit-content;
   }
   .PostReply-container .Comment-Header .Comment-info .deets-m {
@@ -414,6 +429,14 @@
     padding: 10px;
     margin: 0px;
   }
+  .PostReply-container
+    .Comment-Header
+    .Comment-info
+    .deets-m
+    .deets-opt.active
+    li:hover {
+      cursor: pointer;
+    }
   .PostReply-container .Comments .Comment-Header .content-container {
     margin-left: 10px;
   }
@@ -429,7 +452,8 @@
     width: 10px;
   }
   .username {
-    font-size: 12px;
+    font-size: 19px;
+    margin-top: 10%;
   }
   .PostReply-container .Post-Reply-wrapper .Replies-wrapper {
     width: 90%;
@@ -437,24 +461,43 @@
   .PostReply-container .Post-Reply-wrapper .Replies-wrapper .Replies-main {
     padding-left: 10px;
   }
+}
+
+@media only screen and (max-width: 700px) {
+  .PostReply-container .Comments .Comment-Header {
+    width: 80%;
+  }
+
+  .PostReply-container .Comment-Header .Comment-info {
+    position: relative;
+    padding: 0%;
+    width: 100%;
+  }
+  .PostReply-container .Comment-Header .Comment-info .date {
+    font-size: x-small;
+  }
   .PostReply-container
-    .Post-Reply-wrapper
-    .Replies-wrapper
-    .Replies-main
+  .Comments
     .Comment-Header
     .Comment-info
     .inner-header {
-    padding: 0px;
+      width: 60%;
+    padding: 0%;
   }
   .PostReply-container
     .Post-Reply-wrapper
-    .Replies-wrapper
-    .Replies-main
+    .PostReply-main
     .Comment-Header
     .Comment-info
     .inner-header
-    img {
-    width: 30px;
+    div {
+    width: 70%;
   }
-
+  .PostReply-container .Comment-Header .Comment-info .inner-header div img {
+    width: 40px;
+  }
+  .username {
+    font-size: small;
+    margin-top: 10%;
+  }
 }

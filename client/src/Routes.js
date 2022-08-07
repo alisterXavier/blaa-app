@@ -15,10 +15,10 @@ export const Validation = React.createContext();
 
 function R(props) {
   const [validation, setValidation] = useState(validate(localStorage.getItem('token')).login);
-  const [width, setWidth] = useState(window.screen.width);
+  const [width, setWidth] = useState(window.innerWidth);
   useEffect(() => {
     window.addEventListener("resize", () => {
-      setWidth(window.screen.width);
+      setWidth(window.innerWidth);
     });
   });
   return (

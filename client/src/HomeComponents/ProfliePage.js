@@ -8,8 +8,9 @@ import socket from "../Socket";
 import NavBar from "./Navbar";
 import { Loading } from "../Loading/Load";
 import { check_content, userName, onDislike, onLike } from "../Functions";
+import BgParticles from "../tsparticles/particles";
 import { validate } from "../token";
-import { Screen } from "../Routes";
+import { Screen, Validation } from "../Routes";
 
 function BG(props) {
   const divs = (oarr, int) => {
@@ -39,16 +40,14 @@ function Profile() {
   };
   const CurrUser = validate(token.authorization).username;
   const [ActiveContent, setActiveContent] = useState("posts");
-  const [validation, setValidation] = useState(
-    validate(localStorage.getItem("token")).login
-  );
   const [Deets, setDeets] = useState({ index: -1, id: "" });
   const [MobileDeets, setMobileDeets] = useState({ deetsId: -1, deets: false });
   const [UserContent, setUserContent] = useState();
   const [UserData, setUserData] = useState();
-  const [DeleteModal, setDeleteModal] = useState({ delete: false, id: "" });
-  const [EditModal, setEditModal] = useState({ edit: false, id: "" });
-  const [Reply, setReply] = useState({ id: 0, reply: false });
+  const [DeleteModal, setDeleteModal] = useState({ delete: false, id: -1 });
+  const [EditModal, setEditModal] = useState({ edit: false, id: -1 });
+  const [Reply, setReply] = useState({ id: -1, reply: false });
+  const validation = useContext(Validation)
   const screen = useContext(Screen);
 
   const DeleteConfirmation = (id, type, cId) => {
@@ -69,19 +68,14 @@ function Profile() {
     }
   };
 
-  const sliderOut = (e) => {
-    document.getElementById(e.target.lastChild.id).removeAttribute("style");
-  };
-
-  const sliderin = (e) => {
-    document.getElementById(e.target.lastChild.id).style.left = "0%";
-  };
-
   const Edit = (id) => {
-    setEditModal((EditModal) => ({
-      edit: true,
-      id: id,
-    }));
+    setReply({});
+    if (EditModal.edit) setEditModal({});
+    else
+      setEditModal({
+        edit: true,
+        id: id,
+      });
   };
 
   const bgMove = (e) => {
@@ -91,8 +85,8 @@ function Profile() {
     if (bg !== undefined) {
       for (const x in bg) {
         if (bg.hasOwnProperty(x)) {
-          valueX = x % 2 !== 0 ? (e.pageX * -1) / 50 : (e.pageX * 1) / 50;
-          valueY = x % 2 !== 0 ? (e.pageY * -1) / 50 : (e.pageY * 1) / 50;
+          valueX = x % 2 !== 0 ? (e.pageX * -1) / 20 : (e.pageX * 1) / 20;
+          valueY = x % 2 !== 0 ? (e.pageY * -1) / 20 : (e.pageY * 1) / 20;
           bg[x].style.transform = `translate3d(${valueX}px,${valueY}px, 0)`;
         }
       }
@@ -100,7 +94,8 @@ function Profile() {
   };
 
   const reply = (e) => {
-    if (e === Reply.index) setReply({ id: -1, reply: false });
+    setEditModal({});
+    if (Reply.reply) setReply({});
     else setReply({ id: e, reply: true });
   };
 
@@ -134,7 +129,14 @@ function Profile() {
       <NavBar></NavBar>
       {UserData !== undefined && UserContent !== undefined ? (
         <>
-          <BG CurrUser={CurrUser} avatar={UserData.avatar}></BG>
+          {screen < 900 ? (
+            <BgParticles
+              className="profile-bg-container"
+              image={UserData.avatar}
+            ></BgParticles>
+          ) : (
+            <BG CurrUser={CurrUser} avatar={UserData.avatar}></BG>
+          )}
           <div className="Profile-page">
             {DeleteModal.delete && (
               <Delete
@@ -168,25 +170,24 @@ function Profile() {
                     ></span>
                   </li> */}
                   <li
-                    onMouseLeave={sliderOut}
-                    onMouseOver={sliderin}
+                    className="Posts"
                     onClick={() => {
                       setActiveContent("posts");
                     }}
                   >
                     Posts
-                    <span className="slider" id="slider2"></span>
+                    {/* <span className="slider" id="slider2"></span> */}
                   </li>
                   <li
-                    onMouseLeave={sliderOut}
-                    onMouseOver={sliderin}
+                    className="Replies"
                     onClick={() => {
                       setActiveContent("replies");
                     }}
                   >
                     Replies
-                    <span className="slider" id="slider3"></span>
+                    {/* <span className="slider" id="slider3"></span> */}
                   </li>
+                  <span className="slider" id={ActiveContent}></span>
                 </ul>
               </header>
               <div className="PostReply-container">
@@ -255,7 +256,7 @@ function Profile() {
                                     {userName(data["username"], navigate)}
                                   </div>
                                   <p className="date">{data["createdAt"]}</p>
-                                  {screen < 500 && (
+                                  {screen < 900 && (
                                     <div className="deets-m">
                                       <span>
                                         <svg
@@ -299,10 +300,7 @@ function Profile() {
                                                 <li
                                                   onClick={() => {
                                                     setMobileDeets({});
-                                                    setEditModal({
-                                                      edit: true,
-                                                      id: index,
-                                                    });
+                                                    Edit(data["_id"]);
                                                   }}
                                                 >
                                                   Edit
@@ -344,7 +342,7 @@ function Profile() {
                                 </div>
                               </div>
                             </div>
-                            {screen > 500 && (
+                            {screen > 900 && (
                               <ul className="deets-l">
                                 {validation && (
                                   <>
@@ -496,7 +494,7 @@ function Profile() {
                                     {userName(data["username"], navigate)}
                                   </div>
                                   <p className="date">{data["createdAt"]}</p>
-                                  {screen < 500 && (
+                                  {screen < 900 && (
                                     <div className="deets-m">
                                       <span>
                                         <svg
@@ -527,7 +525,14 @@ function Profile() {
                                       >
                                         {validation && (
                                           <>
-                                            <li>Reply</li>
+                                            <li
+                                              onClick={() => {
+                                                reply(data["_id"]);
+                                                Edit();
+                                              }}
+                                            >
+                                              Reply
+                                            </li>
                                             {CurrUser === data["username"] && (
                                               <>
                                                 <li
@@ -575,7 +580,7 @@ function Profile() {
                                 </div>
                               </div>
                             </div>
-                            {screen > 500 && (
+                            {screen > 900 && (
                               <ul className="deets-l">
                                 <li
                                   className={

@@ -1,192 +1,189 @@
 .Profile-page {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding-bottom: 50px;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-  }
-  .profile-bg {
-    position: fixed;
-    color: white;
-    width: 30px;
-  }
-  .profile-bg-container .profile-bg:nth-child(1) {
-    top: 10%;
-    left: 15%;
-  }
-  .profile-bg-container .profile-bg:nth-child(2) {
-    top: 10%;
-    left: 50%;
-  }
-  .profile-bg-container .profile-bg:nth-child(3) {
-    top: 10%;
-    left: 85%;
-  }
-  .profile-bg-container .profile-bg:nth-child(4) {
-    top: 50%;
-    left: 15%;
-  }
-  .profile-bg-container .profile-bg:nth-child(5) {
-    top: 50%;
-    left: 50%;
-  }
-  .profile-bg-container .profile-bg:nth-child(6) {
-    top: 50%;
-    left: 85%;
-  }
-  .profile-bg-container .profile-bg:nth-child(7) {
-    top: 90%;
-    left: 15%;
-  }
-  .profile-bg-container .profile-bg:nth-child(8) {
-    top: 90%;
-    left: 50%;
-  }
-  .profile-bg-container .profile-bg:nth-child(9) {
-    top: 90%;
-    left: 85%;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 50px;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.profile-bg {
+  position: fixed;
+  color: white;
+  width: 30px;
+}
+.profile-bg-container .profile-bg:nth-child(1) {
+  top: 10%;
+  left: 15%;
+}
+.profile-bg-container .profile-bg:nth-child(2) {
+  top: 10%;
+  left: 50%;
+}
+.profile-bg-container .profile-bg:nth-child(3) {
+  top: 10%;
+  left: 85%;
+}
+.profile-bg-container .profile-bg:nth-child(4) {
+  top: 50%;
+  left: 15%;
+}
+.profile-bg-container .profile-bg:nth-child(5) {
+  top: 50%;
+  left: 50%;
+}
+.profile-bg-container .profile-bg:nth-child(6) {
+  top: 50%;
+  left: 85%;
+}
+.profile-bg-container .profile-bg:nth-child(7) {
+  top: 90%;
+  left: 15%;
+}
+.profile-bg-container .profile-bg:nth-child(8) {
+  top: 90%;
+  left: 50%;
+}
+.profile-bg-container .profile-bg:nth-child(9) {
+  top: 90%;
+  left: 85%;
+}
+.Profile-page .header-content {
+  border: var(--dark-border);
+  box-shadow: var(--dark-box-shadow);
+  width: 85%;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  border-radius: 5px;
+  padding: 30px 65px;
+}
+.Profile-page .header-content div {
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.Profile-page .Post-Reply-wrapper {
+  width: 100%;
+}
+.Profile-page .Post-Reply-wrapper .PostReply-main {
+  width: 100%;
+}
+.Profile-page .Post-Reply-wrapper .PostReply-main .Comments {
+  width: 100%;
+}
+.Profile-page .main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: transparent;
+  width: 90%;
+  padding: 50px 0px;
+  box-shadow: var(--dark-box-shadow);
+  border: 1px solid transparent;
+  border-radius: 5px;
+}
+.Profile-page .main-content .content-nav {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.Profile-page .main-content .content-nav ul {
+  display: flex;
+  width: 90%;
+  padding: 0%;
+  text-align: center;
+  background-color: black;
+  position: relative;
+}
+.Profile-page .main-content .content-nav ul li {
+  position: relative;
+  width: 50%;
+  z-index: 1;
+  font-size: larger;
+  color: white;
+  margin: 0%;
+  line-height: 50px;
+  overflow: hidden;
+  list-style: none;
+  text-align: center;
+}
+.Profile-page .main-content .content-nav ul li:hover {
+  cursor: pointer;
+}
+.Profile-page .main-content .content-nav ul .slider {
+  position: absolute;
+  z-index: 0;
+  width: 50%;
+  height: 100%;
+  background-color: grey;
+  transition: all 800ms ease 0s;
+}
+.Profile-page .main-content .content-nav ul #posts,
+.Profile-page .main-content .content-nav ul .Posts:hover ~ .slider {
+  left: 0%;
+  background-color: red;
+}
+.Profile-page .main-content .content-nav ul #replies,
+.Profile-page .main-content .content-nav ul .Replies:hover ~ .slider {
+  background-color: lime;
+  left: 50%;
+}
+.Profile-page .main-content .PostReply-container {
+  border: 1px solid transparent;
+  width: 90%;
+  border-radius: 5px;
+  padding: 50px 50px;
+  box-shadow: var(--dark-box-shadow);
+}
+.Replies .Comment-header .Comment-info {
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+@media only screen and (max-width: 900px) {
   .Profile-page .header-content {
-    border: var(--dark-border);
-    box-shadow: var(--dark-box-shadow);
-    width: 85%;
-    margin-top: 10px;
-    margin-bottom: 30px;
-    border-radius: 5px;
-    padding: 30px 65px;
+    padding: 50px 10px;
+    width: 90%;
+  }
+  .profile-bg-container .profile-bg {
+    opacity: 0.7;
   }
   .Profile-page .header-content div {
-    width: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 150px;
   }
-  .Profile-page .Post-Reply-wrapper{
-    width: 100%;
+  .Profile-page .header-content .header-img img {
+    width: 60px;
   }
-  .Profile-page .Post-Reply-wrapper .PostReply-main{
-    width: 100%;
-  }
-  .Profile-page .Post-Reply-wrapper .PostReply-main .Comments{
-    width: 100%;
+  .Profile-page .header-content .username {
+    font-size: 25px;
+    margin: 0px;
   }
   .Profile-page .main-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: transparent;
     width: 90%;
-    padding: 50px 0px;
-    box-shadow: var(--dark-box-shadow);
-    border: 1px solid transparent;
-    border-radius: 5px;
-  }
-  .Profile-page .main-content .content-nav {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
-  .Profile-page .main-content .content-nav ul {
-    display: flex;
-    width: 90%;
-    padding: 0%;
-    text-align: center;
-    background-color: black;
-    position: relative;
+    border: none;
+    border-radius: 0px;
   }
   .Profile-page .main-content .content-nav ul li {
-    width: 50%;
-    position: relative;
-    font-size: larger;
-    color: white;
-    margin: 0%;
-    padding: 20px 0px;
-    overflow: hidden;
-    list-style: none;
-    text-align: center;
-  }
-  .Profile-page .main-content .content-nav ul li:hover {
-    background-color: grey;
-    cursor: pointer;
-  }
-  .Profile-page .main-content .content-nav ul li span {
-    position: absolute;
-    right: 0%;
-    bottom: 0%;
-    background-color: blue;
-    height: 0.3rem;
-    width: 0%;
-    transition: all 1s ease;
-  }
-  .Profile-page .main-content .content-nav ul li:hover span {
-    transition: all 1s ease;
+    padding: 10px 0px;
     width: 100%;
   }
-  /* .Profile-page .main-content{
-    position: relative;
-    height: 100%;
-    width: 80%;
-    padding: 20px 0px;
-    margin: 0px 85px;
-  } */
+  .Profile-page .main-content .PostReply-container .PostReply-main {
+    display: flex;
+    justify-content: center;
+  }
   .Profile-page .main-content .PostReply-container {
-    border: 1px solid transparent;
+    padding: 0px;
+    border: none;
+    box-shadow: none;
     width: 90%;
-    border-radius: 5px;
-    padding: 50px 50px;
-    box-shadow: var(--dark-box-shadow);
   }
-  .Replies .Comment-header .Comment-info {
-    padding: 5px;
-    margin-bottom: 5px;
+  .Profile-page .main-content .PostReply-container .Comments {
+    width: 90%;
   }
-
-  @media only screen and (max-width: 800px){
-
-    .Profile-page .header-content{
-        padding: 50px 10px;
-        width: 90%;
-    }
-    .profile-bg-container .profile-bg{
-      opacity: .7;
-    }
-    .Profile-page .header-content div{
-        width: 150px;
-    }
-    .Profile-page .header-content .header-img img{
-        width: 60px;
-    }
-    .Profile-page .header-content .username{
-        font-size: 25px;
-        margin: 0px;
-    }
-    .Profile-page .main-content{
-      width: 90%;
-      border: none;
-      border-radius: 0px;
-    }
-    .Profile-page .main-content .content-nav ul li{
-        padding: 10px 0px;
-        width: 100%;
-    }
-    .Profile-page .main-content .PostReply-container .PostReply-main{
-      display: flex;
-      justify-content: center;
-    }
-    .Profile-page .main-content .PostReply-container{
-        padding: 0px;
-        border: none;
-        box-shadow: none;
-        width: 90%;
-    }
-    .Profile-page .main-content .PostReply-container .Comments{
-      width: 90%;
-    }
-    .Profile-page .main-content .PostReply-container .content-container img{
-      max-width: 150px;
-      max-height: 150px;
-    }
+  .Profile-page .main-content .PostReply-container .content-container img {
+    max-width: 150px;
+    max-height: 150px;
   }
+}

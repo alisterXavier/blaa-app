@@ -85,7 +85,7 @@ function Replies(props) {
                         {userName(data["username"], navigate)}
                       </div>
                       <p className="date">{data["createdAt"]}</p>
-                      {screen < 500 && (
+                      {screen < 900 && (
                         <div className="deets-m">
                           <span>
                             <svg
@@ -160,7 +160,7 @@ function Replies(props) {
                     </div>
                   </div>
                 </div>
-                {screen > 500 && (
+                {screen > 900 && (
                   <ul className="deets-l">
                     {validation[0] && (
                       <>
@@ -289,7 +289,6 @@ function Content(props) {
   const CurrUser = useContext(username);
   const validation = useContext(Validation);
   const screen = useContext(Screen);
-
   const DeleteConfirmation = (id, type, cId) => {
     setDeleteModal((DeleteModal) => ({
       delete: true,
@@ -300,10 +299,10 @@ function Content(props) {
   };
 
   const Edit = (id) => {
-    setEditModal((EditModal) => ({
+    setEditModal({
       edit: true,
       id: id,
-    }));
+    });
   };
 
   const reply = (e) => {
@@ -420,7 +419,7 @@ function Content(props) {
                               {userName(data["username"], navigate)}
                             </div>
                             <p className="date">{data["createdAt"]}</p>
-                            {screen < 500 && (
+                            {screen < 900 && (
                               <div className="deets-m">
                                 <span>
                                   <svg
@@ -501,7 +500,7 @@ function Content(props) {
                           </div>
                         </div>
                       </div>
-                      {screen > 500 && (
+                      {screen > 900 && (
                         <ul className="deets-l">
                           {validation[0] && (
                             <>

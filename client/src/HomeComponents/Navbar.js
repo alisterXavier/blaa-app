@@ -173,7 +173,7 @@ function NavBar() {
                   Profile
                 </p>
                 <img
-                  alt="Profile-pic"
+                  // alt="Profile-pic"
                   id="Profile-pic"
                   src={Avatar !== undefined ? Avatar.avatar : ""}
                 ></img>

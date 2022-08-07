@@ -28,10 +28,10 @@ function LoginPage() {
 
   const handleFeedback = () => {
     document.getElementById("Login-feedback").style.animation =
-      "slideout 900ms ease";
+      "slideout 500ms ease";
     setTimeout(() => {
       setAuthentication();
-    }, 800);
+    }, 400);
   };
 
   const handleLoginFeed = () => {
@@ -53,7 +53,7 @@ function LoginPage() {
 
   const handleClick = async (e) => {
     const password = document.getElementById("password");
-    const { id, className } = e.target;
+    // const { id, className } = e.target;
     if (Username === "") {
       const username = document.getElementById("username");
       username.style.borderLeft = "1px solid red";
