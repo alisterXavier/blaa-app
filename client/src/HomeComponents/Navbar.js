@@ -82,6 +82,7 @@ function NavBar() {
           ).then((res) => {
             setNewPost(!NewPost);
             setContent("");
+            setImage(null)
           });
         }, 1000)
 
